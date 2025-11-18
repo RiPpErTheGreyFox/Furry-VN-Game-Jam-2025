@@ -820,20 +820,20 @@ ConvertVRAMTileMapToROMTileMap:
 	jp z, .TileMapThree
 	; TODO: if we have more than one level, add more conditionals
 .Cutscene
-	ld bc, CutsceneTilemap
-	add hl, bc
+	;ld bc, CutsceneTilemap
+	;add hl, bc
 	jp .EndOfFunc
 .TileMapOne
-	ld bc, LevelOneTilemap
-	add hl, bc
+	;ld bc, LevelOneTilemap
+	;add hl, bc
 	jp .EndOfFunc
 .TileMapTwo
-	ld bc, LevelTwoTilemap
-	add hl, bc
+	;ld bc, LevelTwoTilemap
+	;add hl, bc
 	jp .EndOfFunc
 .TileMapThree
-	ld bc, LevelThreeTilemap
-	add hl, bc
+	;ld bc, LevelThreeTilemap
+	;add hl, bc
 .EndOfFunc
 	ret
 

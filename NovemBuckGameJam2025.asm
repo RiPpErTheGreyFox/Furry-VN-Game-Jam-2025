@@ -10,6 +10,7 @@ INCLUDE "include/vnEngineSoundSubroutines.inc"
 SECTION "Counter", WRAM0
 wFrameCounter: db
 wButtonDebounce: db
+wYScrollCounter: db
 
 SECTION "Input Variables", WRAM0		; set labels in Work RAM for easy variable use
 wCurKeys: db							; label: declare byte, reserves a byte for use later
@@ -170,12 +171,14 @@ InitialiseMainMenu:
 
 	call TileLoader
 
-	ld [wPlayerTileFirstIndex],bc
+	ld a, c
+	ld [wPlayerTileFirstIndex], a
 	ld hl, _OAMRAM
 	ld a, 64
 	ld [hli], a					; Y pos
 	ld [hli], a					; X pos
-	ld [hli], c					; Tile ID
+	ld a, c
+	ld [hli], a					; Tile ID
 	ld a, 0
 	ld [hli], a					; attributes
 
