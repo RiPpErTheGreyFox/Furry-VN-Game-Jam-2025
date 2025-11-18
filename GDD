@@ -1,0 +1,96 @@
+Furry Visual Novel Game Jam 2025
+
+Platform:
+Gameboy/Color Gameboy
+
+Optional Theme: 
+Retro (should be nailing it with the gameboy and 90's IRC aesthetic)
+
+Engine/Software used:
+Custom GBZ80 engine, using RGBDS assembler
+Aseprite - Art
+NEXXT - Art
+hUGETracker - Music
+
+Schedule:
+12 days total (ends Dec. 1st 9am AEDT)
+Days 1-4: Engine design and testing
+Days 5-8: MVP: Getting basic VN laid down with at least placeholder art and sounds
+Days 8-11: Iterating: adding more stuff from the feature list as needed, working on the mechanics, tweaking anything needed
+Day 12: Final Polish
+Day 12: Submission Day
+
+Basic Concept:
+A shortform horror VN about the protag discovering more than they should on an IRC, intended to be played for between 5-15 minutes (may be longer if things go well)
+
+Elevator Pitch:
+Set in the 90's in a suburban area, the player, their first weekend home alone in a while decides to research local legends by joining a cryptid IRC chat room and finds that the legends may be closer to home than anticipated, presented in a short form horror VN format
+
+Art Style:
+A realistic art style, depicting real life locations crunched down to 160*144@2bpp, attempting to breed familiarity in the player to relatable locations
+
+
+Overview of features required for VN engine:
+Scene loading from cartridge
+ROM banking (need to research mapper carts)
+Dialogue parsing and rendering
+Resizable text boxes
+Character rendering onto screen (maybe using OAM's? Max size is 48*48 if OAM based, OAM's would make transitions easier)
+Dialogue choice's/menu dialogs
+ ^needs to be affected by previous choices (have flags definable)
+String storage for later (8 characters?)
+Parsing string replacements in dialogue renderer (check for $name____ and replace with name strvar as needed)
+Reversed palette text rendering with a flag
+Scene transitions
+Actor transitions
+Sound effects playing
+Music playing
+Using DMA to copy data to speed it up for animations/loading (needs a HRAM handling function)
+
+Gameplay loop example:
+Transition from off
+Display image of main menu
+Press Start
+Transition to an intro background
+Play Dialogue
+Ask for name, store name
+Play more dialogue
+Transition to a second background
+Transition to show actor
+Dialogue
+Actor change state (from greeting to talking)
+Dialogue
+Actor change state (from talking to worried)
+Dialogue
+Transition to hide actor
+...ETC...
+
+Immediate To-do:
+Research and implement MBC5 mapping
+Test MBC5 mapping by placing a test image on a different bank and rendering it
+Come up with a scene format that will work
+Test loading 6*6 metaobjects and moving them around to see how DMG handles that much data
+Try flipping through animations with it (animation handler needed)
+Implement a test scene without the correct formatting to ensure basic engine works
+Slowly move the aboves entire setup into the decided format
+Transitions that consist of either fading in/out (backgrounds) or sliding in/out from left/right (OAMs)
+
+Needed for MVP:
+Basic storyboard done
+House layout done
+Design bible finished
+VN Engine that allows easy insertion of scenes and their data into a source file
+Make an index of every scene and it's interactions?
+A single route through the story, one ending, one path
+
+Notes:
+
+Features that are polish:
+Colour images/support (Super Gameboy/Gameboy Colour, probably go for the CGB because it's more supported on emulators/hardware)
+Branching paths
+Additional endings
+Extra character interactions
+More areas of the house unlocked
+Additional scenes/length
+More sound effects
+More animations/transition effects
