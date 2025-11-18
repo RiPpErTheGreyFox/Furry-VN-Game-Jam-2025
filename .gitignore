@@ -1,1 +1,10 @@
 /build
+#object files
+*.o
+*.map
+*.sym
+#bin files
+*.gb
+#intermediate files
+*.2bpp
+*.tilemap
