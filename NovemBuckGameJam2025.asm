@@ -34,6 +34,8 @@ wVictoryFlagSet: db
 wCurrentScene: db						; 0=MainMenu, 1=Cutscene, 2=HowToPlay, 3=Game
 
 SECTION "Animation Data", WRAM0
+wPlayerOAMOffset: db
+wPlayerTileFirstIndex: db
 wPlayerCurrentFrame: db
 
 SECTION "Managed Variables", WRAM0
@@ -159,22 +161,23 @@ jp ProgramMain
 
 ; placeholder init sub for testing the base program works
 InitialiseMainMenu:
-	; Copy tile data into VRAM
-	ld de, MainMenuTiles				; load the address of the tiles into the DE register
-	ld hl, $9000				; load the beginning VRAM address into HL (HL is easy to inc/dec)
-	ld bc, MainMenuTilesEnd - MainMenuTiles		; load the length of Tiles into BC
-	call Memcopy				; call the memcopy subroutine
-
-	; The above tile loading will clobber the tilemap in VRAM, but for now just load the other half of tiles
-
-	; Copy tilemap data into VRAM (functionally identical to above but pointing to tilemap data and addresses)
-	ld de, MainMenuTilemap
-	ld hl, $9800
-	ld bc, MainMenuTilemapEnd - MainMenuTilemap
-	call Memcopy				; call the memcopy subroutine
-
 	call TileLoaderReset
     call SetBlankDMGPalette
+
+	ld de, TestSpriteData
+	ld bc, TestSpriteDataEnd - TestSpriteData
+	ld a, 0
+
+	call TileLoader
+
+	ld [wPlayerTileFirstIndex],bc
+	ld hl, _OAMRAM
+	ld a, 64
+	ld [hli], a					; Y pos
+	ld [hli], a					; X pos
+	ld [hli], c					; Tile ID
+	ld a, 0
+	ld [hli], a					; attributes
 
 	; set how scrolled the screen is
 	ld a, 112

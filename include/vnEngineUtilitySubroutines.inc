@@ -400,6 +400,31 @@ TileLoader:
   	rr c
 	ret
 
+; Overwrites the current background with one from memory
+; @clobbers: a
+; @stack args (push order): tilemap 16-bit address (de), tilemap 16-bit length (bc)
+; @param: de: address of the tiles to load
+; @param: bc: the length of tile data to load
+; @return: bc: index of the first tile loaded via this function
+LoadNewBackground:
+	; Copy tile data into VRAM
+	; the address of the tiles is in the DE register
+	; length of Tiles is in BC
+	ld hl, $9000				; load the beginning VRAM address into HL (HL is easy to inc/dec)
+	call Memcopy				; call the memcopy subroutine
+
+	; The above tile loading will clobber the tilemap in VRAM, but for now just load the other half of tiles
+
+	; Copy tilemap data into VRAM (functionally identical to above but pointing to tilemap data and addresses)
+	; utilise the stack for more arguments
+
+	pop de; the address of the tiles is in the DE register
+	pop bc; length of Tiles is in BC
+	ld hl, $9800				; point toward the tilemap
+	call Memcopy				; call the memcopy subroutine
+
+ret
+
 ; sets the basic 4 shade palette on the background and both objects
 ; @clobbers: a
 SetDefaultDMGPalette:
