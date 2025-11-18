@@ -1,5 +1,5 @@
 INCLUDE "include/hardware.inc"			; include all the hardware definitions
-INCLUDE "include/structs.inc"			; and other out of file definitions
+										; and other out of file definitions
 
 INCLUDE "include/vnEngineConstants.inc"
 INCLUDE "include/vnEngineStructs.inc"	; include all the main data needed for the engine
