@@ -5,6 +5,14 @@ DEF VNENGINESTRUCTS_INC EQU 1
 
 INCLUDE "include/structs.inc"
 
+    struct METASPRITE
+        bytes 1, YPos ; 1 byte
+        bytes 1, XPos ; 1 byte
+        bytes 1, XSize ; max of 6
+        bytes 1, YSize ; max of 6
+        bytes 36, Tiles ; tile indices
+    end_struct
+
     struct CURSOR
         bytes 1, YPos ; 1 byte
         bytes 1, XPos ; 1 byte

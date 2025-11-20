@@ -3,6 +3,7 @@
 DEF VNENGINEUTILITYSUBROUTINES_INC EQU 1
 
 INCLUDE "include/hardware.inc"			; include all the hardware definitions
+INCLUDE "include/vnEngineStructs.inc"
 
 SECTION "OAM DMA CODE AREA",HRAM
 hOAMDMA:
@@ -10,6 +11,9 @@ hOAMDMA:
 
 SECTION "OAM Shadow Map", WRAM0,ALIGN[8]
 wShadowOAM: ds 4*40						; the sprite object attribute buffer (all writes to OAM should be done here)
+
+SECTION "DrawingVariables", WRAM0
+	dstruct METASPRITE, testMetaSprite
 
 SECTION "Subroutines", ROM0
 
@@ -224,7 +228,7 @@ DisableLCD:
 ; @clobbers a
 EnableLCD:
 	; Turn the LCD on
-	ld a, LCDCF_ON | LCDCF_BGON	| LCDCF_OBJON | LCDCF_BG8800 ; OR together the desired flags for LCD control
+	ld a, LCDCF_ON | LCDCF_OBJ16 | LCDCF_BGON	| LCDCF_OBJON | LCDCF_BG8800 ; OR together the desired flags for LCD control
 	ld [rLCDC], a				; then push them to the LCD controller
 	
 	ret
@@ -475,6 +479,123 @@ OAMDMARoutine:
 	jr nz, .wait
 	ret
 OAMDMARoutineEnd:
+
+InitTestMetaSprite:
+	ld a, 32
+	ld [testMetaSprite_XPos], a
+	ld [testMetaSprite_YPos], a
+	ld a, 6
+	ld [testMetaSprite_XSize], a
+	ld [testMetaSprite_YSize], a
+	ld a, 1
+	ld b, 36
+	ld hl, testMetaSprite_Tiles
+.loop:
+	ld [hli], a
+	dec b
+	jr nz, .loop
+	ret
+; TODO: turn into proper function
+; renders the entirety of a metasprite to OAM
+RenderMetaSprite:
+	; use hl for OAM index
+	; set two registers to the X/Y position
+	; b/c is used for x/y pos
+	; use one register to count the X loop
+	; use another for the Y loop
+	; d/e is used for x/y loop
+
+	ld a, [testMetaSprite_XPos]
+	ld b, a
+	ld a, [testMetaSprite_YPos]
+	ld c, a
+	ld a, [testMetaSprite_XSize]
+	ld d, a
+	ld a, [testMetaSprite_YSize]
+	ld e, a
+	ld hl, wShadowOAM
+
+	; X/Y position loop
+	;start Y loop
+.YLoop
+	;	start X loop
+.XLoop
+	;		set tile index to the correct one
+			ld a, c ; load with Y Pos
+			ld [hli], a
+			ld a, b ; load with x position
+			ld [hli], a
+			inc hl
+			inc hl	; go to next object in OAM
+	;		increment tile counter
+	;	increase X position by 8
+		inc b
+		inc b
+		inc b
+		inc b
+		inc b
+		inc b
+		inc b
+		inc b
+	;	decrease X loop counter
+		dec d
+	;	check for X loop break
+		jr nz, .XLoop
+	; resert X loop counter
+	ld a, [testMetaSprite_XPos]
+	ld b, a
+	ld a, [testMetaSprite_XSize]
+	ld d, a
+	; increase Y position by 16
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	inc c
+	; decrease Y loop counter
+	dec e
+	; check for Y loop break
+	jr nz, .YLoop
+.XYPosLoopDone
+
+; tile index loop
+; one register for tilecount
+ld b, 36 ; just copy every tile, idgaf
+ld de, testMetaSprite_Tiles
+ld hl, wShadowOAM + 2
+
+.TileLoopStart
+	ld a, [de]
+	ld [hli], a
+	inc hl
+	inc hl
+	inc hl
+	inc de
+	dec b
+	jp nz, .TileLoopStart
+.TileLoopDone
+
+
+	;struct METASPRITE
+    ;    bytes 1, YPos ; 1 byte
+    ;    bytes 1, XPos ; 1 byte
+    ;    bytes 1, XSize ; max of 6
+    ;    bytes 1, YSize ; max of 6
+    ;    bytes 36, Tiles ; tile indices
+    ;end_struct
+
+	ret
 
 ; sets the basic 4 shade palette on the background and both objects
 ; @clobbers: a

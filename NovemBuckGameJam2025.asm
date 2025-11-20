@@ -111,6 +111,8 @@ ProgramEntry:							; main game loop
 	call ClearOAM
 	call ClearShadowOAM
 
+	call InitTestMetaSprite
+
 	; once the OAM is clear, we can draw an object by writing its properties
 	call SetDefaultDMGPalette
 	call LoadDefaultCGBPalette
@@ -150,6 +152,8 @@ ProgramMain:
 	; call the OAM DMA routine the second we hit the start of VBlank to get it out of the way and stay out of mode 3
 	ld a, HIGH(wShadowOAM)
 	call hOAMDMA
+
+	call RenderMetaSprite
 
 	; check which scene we're on and tick that
 	; 0=MainMenu, 1=Cutscene, 2=HowToPlay, 3=Game
@@ -213,7 +217,35 @@ UpdateMainMenuScene:
 
     ld a, [wCurKeys]
 	and a, PADF_START
-	jp nz, .StartGame
+	jp z, .CheckUpPressed
+.CheckUpPressed:
+    ld a, [wCurKeys]
+	and a, PADF_UP
+	jp z, .CheckDownPressed
+	ld hl, testMetaSprite_YPos
+	dec [hl]
+	jp .EndOfFunc
+.CheckDownPressed:
+    ld a, [wCurKeys]
+	and a, PADF_DOWN
+	jp z, .CheckLeftPressed
+	ld hl, testMetaSprite_YPos
+	inc [hl]
+	jp .EndOfFunc
+.CheckLeftPressed:
+    ld a, [wCurKeys]
+	and a, PADF_LEFT
+	jp z, .checkRightPressed
+	ld hl, testMetaSprite_XPos
+	dec [hl]
+	jp .EndOfFunc
+.checkRightPressed:
+    ld a, [wCurKeys]
+	and a, PADF_RIGHT
+	jp z, .EndOfFunc
+	ld hl, testMetaSprite_XPos
+	inc [hl]
+	jp .EndOfFunc
 
     jp .EndOfFunc
 

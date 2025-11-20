@@ -66,10 +66,11 @@ Transition to hide actor
 ...ETC...
 
 Immediate To-do:
+*Implement OAM DMA copying routine for better metasprite handling
 Research and implement MBC5 mapping
 Test MBC5 mapping by placing a test image on a different bank and rendering it
 Come up with a scene format that will work
-Test loading 6*6 metaobjects and moving them around to see how DMG handles that much data
+*Test loading 6*6 metaobjects and moving them around to see how DMG handles that much data
 Try flipping through animations with it (animation handler needed)
 Implement a test scene without the correct formatting to ensure basic engine works
 Slowly move the aboves entire setup into the decided format
