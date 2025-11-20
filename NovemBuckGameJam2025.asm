@@ -129,6 +129,8 @@ ProgramEntry:							; main game loop
 	jp .FinishedLoadingScene
 .FinishedLoadingScene
 
+	call InitialiseFont
+
 	; Initialise variables
 	ld a, 0
 	ld [wButtonDebounce], a
@@ -175,11 +177,19 @@ InitialiseMainMenu:
 	call TileLoaderReset
     call SetBlankDMGPalette
 
+	; Swap bank to bank 2
+	ld a, 2
+	ld [$2000], a
+
 	ld de, TestSpriteData
 	ld bc, TestSpriteDataEnd - TestSpriteData
 	ld a, 0
 
 	call TileLoader
+
+	; Swap back to bank 1
+	ld a, 1
+	ld [$2000], a
 
 	ld a, c
 	ld [wPlayerTileFirstIndex], a
@@ -273,7 +283,7 @@ UpdateMainMenuScene:
 
 SECTION "SceneData", ROMX
 
-SECTION "Graphics Data", ROMX
+SECTION "Graphics Data", ROMX, BANK[2]
 
 TestSpriteData: INCBIN "gfx/spritesheettest.2bpp"
 TestSpriteDataEnd:

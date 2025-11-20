@@ -24,8 +24,8 @@ all: 2bpp backgrounds tilemaps
 	rgbasm -o hUGEDriver.o hUGEDriver.asm
 	rgbasm -o MainMenuMusic.o music/MainMenuMusic.asm
 #	rgblink -o VTuberGameJam2025.gb VTuberGameJam2025.o hUGEDriver.o SampleSong.o
-	rgblink -t -m NovemBuckGameJam2025.map -n NovemBuckGameJam2025.sym -o NovemBuckGameJam2025.gb NovemBuckGameJam2025.o hUGEDriver.o MainMenuMusic.o
-	rgbfix -j -l 0x33 -k "R2" -n 0x01 -s -t "NovemBuck2025" -v  -p 0xFF NovemBuckGameJam2025.gb
+	rgblink -m NovemBuckGameJam2025.map -n NovemBuckGameJam2025.sym -o NovemBuckGameJam2025.gb NovemBuckGameJam2025.o hUGEDriver.o MainMenuMusic.o
+	rgbfix -j -l 0x33 -k "R2" -n 0x01 -m 0x19 -s -t "NovemBuck2025" -v  -p 0xFF NovemBuckGameJam2025.gb
 
 2bpp: $(2BPP_FILES)
 

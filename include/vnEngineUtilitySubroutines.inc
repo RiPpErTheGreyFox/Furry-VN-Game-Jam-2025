@@ -103,11 +103,20 @@ RandomNumberFour:
 ; @clobbers a, bc, de, hl
 InitialiseFont:
 	
+	; Swap bank to bank 2
+	ld a, 2
+	ld [$2000], a
+
 	ld de, AlphabetTiles
 	ld bc, AlphabetTilesEnd - AlphabetTiles
 	ld a, 1
 
 	call TileLoader
+
+	
+	; Swap back to bank 1
+	ld a, 1
+	ld [$2000], a
 
 	ld a, c
 	ld [wFontFirstTileOffset], a
