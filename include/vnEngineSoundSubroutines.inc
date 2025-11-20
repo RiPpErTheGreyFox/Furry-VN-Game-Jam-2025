@@ -1,3 +1,9 @@
+; If all of these are already defined, don't do it again.
+
+    IF !DEF(VNENGINESOUNDSUBROUTINES_INC)
+DEF VNENGINESOUNDSUBROUTINES_INC EQU 1
+
+
 SECTION "Sound Subroutines", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -147,3 +153,6 @@ sound_character_walk: ; give the sound a name in the code
 	DB %11110111	; Data to be written to SOUND_CH4_ENVELOPE
 	DB %01011101	; Data to be written to SOUND_CH4_POLY
 	DB %11000110	; Data to be written to SOUND_CH4_Options
+
+
+    ENDC ;VNENGINESOUNDSUBROUTINES_INC

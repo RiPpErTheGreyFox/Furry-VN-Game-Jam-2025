@@ -77,6 +77,7 @@ SECTION "Header", ROM0[$100]
 EntryPoint:
 	call SystemDetection		; first thing to do is check what kind of system game's running on
 	call EnableSound
+	call InitOAMDMARoutine
 	ld a, 0 
 	ld [wCurrentScene], a
 
@@ -108,6 +109,7 @@ ProgramEntry:							; main game loop
 	ld [rSCX], a
 	
 	call ClearOAM
+	call ClearShadowOAM
 
 	; once the OAM is clear, we can draw an object by writing its properties
 	call SetDefaultDMGPalette
@@ -145,6 +147,10 @@ ProgramMain:
 	jp c, .WaitVBlank2	; jump if carry set (if a < 144)
 	; above is waiting for a full complete frame
 
+	; call the OAM DMA routine the second we hit the start of VBlank to get it out of the way and stay out of mode 3
+	ld a, HIGH(wShadowOAM)
+	call hOAMDMA
+
 	; check which scene we're on and tick that
 	; 0=MainMenu, 1=Cutscene, 2=HowToPlay, 3=Game
 	ld a, [wCurrentScene]
@@ -173,7 +179,7 @@ InitialiseMainMenu:
 
 	ld a, c
 	ld [wPlayerTileFirstIndex], a
-	ld hl, _OAMRAM
+	ld hl, wShadowOAM
 	ld a, 64
 	ld [hli], a					; Y pos
 	ld [hli], a					; X pos

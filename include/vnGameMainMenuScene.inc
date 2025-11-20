@@ -1,3 +1,8 @@
+
+    IF !DEF(VNGAMEMAINMENUSCENE_INC)
+DEF VNGAMEMAINMENUSCENE_INC EQU 1
+
+
 SECTION "MainMenu Variables", WRAM0
 wYScrollCounter: db
 
@@ -70,3 +75,5 @@ UpdateMainMenuScene:
 
 .EndOfFunc
     ret
+
+    ENDC ;VNGAMEMAINMENUSCENE_INC

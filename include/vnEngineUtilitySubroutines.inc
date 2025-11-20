@@ -1,3 +1,16 @@
+
+    IF !DEF(VNENGINEUTILITYSUBROUTINES_INC)
+DEF VNENGINEUTILITYSUBROUTINES_INC EQU 1
+
+INCLUDE "include/hardware.inc"			; include all the hardware definitions
+
+SECTION "OAM DMA CODE AREA",HRAM
+hOAMDMA:
+	ds 8;OAMDMARoutineEnd - OAMDMARoutine ; reserve space to hold the routine that lives in HRAM
+
+SECTION "OAM Shadow Map", WRAM0,ALIGN[8]
+wShadowOAM: ds 4*40						; the sprite object attribute buffer (all writes to OAM should be done here)
+
 SECTION "Subroutines", ROM0
 
 ; Subroutines
@@ -249,6 +262,18 @@ ClearOAM:
 	jp nz, .ClearOAM
 	ret 
 
+; clears the Shadow OAM memory area back to 0, ready for fresh data, call this anytime and DMA it in vblank
+; @clobbers: a, b, hl
+ClearShadowOAM:
+	ld a, 0
+	ld b, 160
+	ld hl, wShadowOAM
+.ClearShadowOAM:
+	ld [hli], a
+	dec b
+	jp nz, .ClearShadowOAM
+	ret
+
 ; Called on startup to determine the type of gameboy program is running on
 ; @clobbers: af, bc, de, hl
 SystemDetection:
@@ -424,6 +449,32 @@ LoadNewBackground:
 	call Memcopy				; call the memcopy subroutine
 
 ret
+
+; copies the OAM DMA routine to HRAM ready to be executed in the future
+; clobbers: a, bc, hl
+InitOAMDMARoutine:
+	ld hl, OAMDMARoutine
+	ld b, OAMDMARoutineEnd - OAMDMARoutine ; number of bytes to copy
+	ld c, LOW(hOAMDMA) ; Low byte of the destination address
+.copy
+	ld a, [hli]
+	ldh [c], a
+	inc c
+	dec b
+	jr nz, .copy
+	ret
+
+; the routine that is stored in HRAM and is run when doing a DMA copy
+; @params: a - HIGH(ShadowOAM), needs the MSB of the OAM map
+OAMDMARoutine:
+	ldh [rDMA], a
+
+	ld a,40
+.wait:
+	dec a
+	jr nz, .wait
+	ret
+OAMDMARoutineEnd:
 
 ; sets the basic 4 shade palette on the background and both objects
 ; @clobbers: a
@@ -873,3 +924,5 @@ UpdateKeys:
 	or a, $F0 ; A7-4 = 1: A3-0 = unpressed keys
 .knownret
 	ret
+
+    ENDC ;VNENGINEUTILITYSUBROUTINES_INC

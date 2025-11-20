@@ -1,3 +1,8 @@
+; If all of these are already defined, don't do it again.
+
+    IF !DEF(VNENGINECONSTANTS_INC)
+DEF VNENGINECONSTANTS_INC EQU 1
+
 ; graphical defines
 DEF PLAYER_TOP_OAM EQU _OAMRAM
 DEF DEFAULT_DEBOUNCE_FRAMES EQU 10
@@ -46,3 +51,6 @@ CHARMAP "w", 47
 CHARMAP "x", 48
 CHARMAP "y", 49
 CHARMAP "z", 50
+
+
+    ENDC ;VNENGINECONSTANTS_INC

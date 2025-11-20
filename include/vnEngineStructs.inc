@@ -1,3 +1,8 @@
+
+    IF !DEF(VNENGINESTRUCTS_INC)
+DEF VNENGINESTRUCTS_INC EQU 1
+
+
 INCLUDE "include/structs.inc"
 
     struct CURSOR
@@ -29,3 +34,6 @@ INCLUDE "include/structs.inc"
         bytes 1, Tile ; 1 byte tile index for drawing/type checking, will be referenced in the update sub
         bytes 1, OAMOffset ; 1 byte which OAM object this will be using to draw to
     end_struct
+
+    
+    ENDC ;VNENGINESTRUCTS_INC
