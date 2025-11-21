@@ -13,7 +13,7 @@ SECTION "OAM Shadow Map", WRAM0,ALIGN[8]
 wShadowOAM: ds 4*40						; the sprite object attribute buffer (all writes to OAM should be done here)
 
 SECTION "DrawingVariables", WRAM0
-	dstruct METASPRITE, testMetaSprite
+	dstruct METASPRITE, globalMetaSprite
 
 SECTION "Subroutines", ROM0
 
@@ -489,23 +489,24 @@ OAMDMARoutine:
 	ret
 OAMDMARoutineEnd:
 
+; initialises the global metasprite with a default test pattern in pos 32x32
 InitTestMetaSprite:
 	ld a, 32
-	ld [testMetaSprite_XPos], a
-	ld [testMetaSprite_YPos], a
+	ld [globalMetaSprite_XPos], a
+	ld [globalMetaSprite_YPos], a
 	ld a, 6
-	ld [testMetaSprite_XSize], a
-	ld [testMetaSprite_YSize], a
+	ld [globalMetaSprite_XSize], a
+	ld [globalMetaSprite_YSize], a
 	ld a, 1
 	ld b, 36
-	ld hl, testMetaSprite_Tiles
+	ld hl, globalMetaSprite_Tiles
 .loop:
 	ld [hli], a
 	dec b
 	jr nz, .loop
 	ret
-; TODO: turn into proper function
-; renders the entirety of a metasprite to OAM
+
+; renders the entirety of the global metasprite
 RenderMetaSprite:
 	; use hl for OAM index
 	; set two registers to the X/Y position
@@ -514,13 +515,13 @@ RenderMetaSprite:
 	; use another for the Y loop
 	; d/e is used for x/y loop
 
-	ld a, [testMetaSprite_XPos]
+	ld a, [globalMetaSprite_XPos]
 	ld b, a
-	ld a, [testMetaSprite_YPos]
+	ld a, [globalMetaSprite_YPos]
 	ld c, a
-	ld a, [testMetaSprite_XSize]
+	ld a, [globalMetaSprite_XSize]
 	ld d, a
-	ld a, [testMetaSprite_YSize]
+	ld a, [globalMetaSprite_YSize]
 	ld e, a
 	ld hl, wShadowOAM
 
@@ -550,10 +551,10 @@ RenderMetaSprite:
 		dec d
 	;	check for X loop break
 		jr nz, .XLoop
-	; resert X loop counter
-	ld a, [testMetaSprite_XPos]
+	; reset X loop counter
+	ld a, [globalMetaSprite_XPos]
 	ld b, a
-	ld a, [testMetaSprite_XSize]
+	ld a, [globalMetaSprite_XSize]
 	ld d, a
 	; increase Y position by 16
 	inc c
@@ -581,7 +582,7 @@ RenderMetaSprite:
 ; tile index loop
 ; one register for tilecount
 ld b, 36 ; just copy every tile, idgaf
-ld de, testMetaSprite_Tiles
+ld de, globalMetaSprite_Tiles
 ld hl, wShadowOAM + 2
 
 .TileLoopStart

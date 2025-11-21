@@ -65,6 +65,24 @@ Dialogue
 Transition to hide actor
 ...ETC...
 
+General Engine Loop:
+Globally owned:
+    Music Handler
+    Sound Handler
+    Metasprite
+    Story Flag Array
+    Scene pointer
+
+Main
+Ticks scene pointer that's stored
+    Scene (Scene owns the game loop)
+        Actor (owns the loop during transitions)
+        Dialogue (owns the loop when rendering out text)
+
+Scene contents:
+Data included in a bank that has space
+have an initialise function where the background gets loaded
+
 Immediate To-do:
 *Implement OAM DMA copying routine for better metasprite handling
 *Research and implement MBC5 mapping
@@ -75,7 +93,15 @@ Try flipping through animations with it (animation handler needed)
 Implement a test scene without the correct formatting to ensure basic engine works
 Slowly move the aboves entire setup into the decided format
 Transitions that consist of either fading in/out (backgrounds) or sliding in/out from left/right (OAMs)
-Research a scanline interrupt at the top of the dialogue box for rendering text
+Research a scanline interrupt at the top of the dialogue box for rendering text using objects
+
+Friday to-do:
+Upgrade the text renderer to allow any size of text box via X/Y position instead of address
+Two test scenes, one big test scene and a small one
+Test Actors made in Aseprite ready to use as a template
+Test backgrounds made in Aseprite ready for template usage
+Metasprite Handlers (disable: sets the position way out of frame, sets all tiles to 0. destination move: used for transitions)
+
 
 Needed for MVP:
 Basic storyboard done

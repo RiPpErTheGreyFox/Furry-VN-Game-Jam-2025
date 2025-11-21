@@ -232,28 +232,28 @@ UpdateMainMenuScene:
     ld a, [wCurKeys]
 	and a, PADF_UP
 	jp z, .CheckDownPressed
-	ld hl, testMetaSprite_YPos
+	ld hl, globalMetaSprite_YPos
 	dec [hl]
 	jp .EndOfFunc
 .CheckDownPressed:
     ld a, [wCurKeys]
 	and a, PADF_DOWN
 	jp z, .CheckLeftPressed
-	ld hl, testMetaSprite_YPos
+	ld hl, globalMetaSprite_YPos
 	inc [hl]
 	jp .EndOfFunc
 .CheckLeftPressed:
     ld a, [wCurKeys]
 	and a, PADF_LEFT
 	jp z, .checkRightPressed
-	ld hl, testMetaSprite_XPos
+	ld hl, globalMetaSprite_XPos
 	dec [hl]
 	jp .EndOfFunc
 .checkRightPressed:
     ld a, [wCurKeys]
 	and a, PADF_RIGHT
 	jp z, .EndOfFunc
-	ld hl, testMetaSprite_XPos
+	ld hl, globalMetaSprite_XPos
 	inc [hl]
 	jp .EndOfFunc
 
