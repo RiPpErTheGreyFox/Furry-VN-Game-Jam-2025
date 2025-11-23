@@ -177,30 +177,10 @@ InitialiseMainMenu:
 	call TileLoaderReset
     call SetBlankDMGPalette
 
-	; Swap bank to bank 2
-	ld a, 2
-	ld [$2000], a
-
-	ld de, TestSpriteData
-	ld bc, TestSpriteDataEnd - TestSpriteData
-	ld a, 0
-
-	call TileLoader
-
-	; Swap back to bank 1
-	ld a, 1
-	ld [$2000], a
-
-	ld a, c
-	ld [wPlayerTileFirstIndex], a
-	ld hl, wShadowOAM
-	ld a, 64
-	ld [hli], a					; Y pos
-	ld [hli], a					; X pos
-	ld a, c
-	ld [hli], a					; Tile ID
-	ld a, 0
-	ld [hli], a					; attributes
+	ld de, TestActorData
+	ld bc, TestActorDataEnd - TestActorData
+	ld a, 2 ; set the bank variable
+	call LoadToMetasprite
 
 	; set how scrolled the screen is
 	ld a, 112
@@ -290,3 +270,7 @@ TestSpriteDataEnd:
 
 AlphabetTiles: INCBIN "gfx/backgrounds/text-font.2bpp"
 AlphabetTilesEnd:
+
+	
+TestActorData: INCBIN "gfx/actors/TestActor.2bpp"
+TestActorDataEnd:

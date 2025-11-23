@@ -109,7 +109,7 @@ InitialiseFont:
 
 	ld de, AlphabetTiles
 	ld bc, AlphabetTilesEnd - AlphabetTiles
-	ld a, 1
+	ld a, 0
 
 	call TileLoader
 
@@ -489,7 +489,53 @@ OAMDMARoutine:
 	ret
 OAMDMARoutineEnd:
 
-; initialises the global metasprite with a default test pattern in pos 32x32
+MetaSpriteTileMap:
+db 0, 12, 24, 36, 48, 60
+db 2, 14, 26, 38, 50, 62
+db 4, 16, 28, 40, 52, 64
+db 6, 18, 30, 42, 54, 66
+db 8, 20, 32, 44, 56, 68
+db 10, 22, 34, 46, 58, 70
+
+; Takes pointers to the tile data and tilemap and loads the global metasprite with them
+; @params: a - which ROM bank to load from
+; @params: de - pointer to tile data
+; @param: bc: the length of tile data to load
+LoadToMetasprite:
+	; switch bank
+	ld [$2000], a
+
+	; reset the pointer because we always go back to 0 index
+	ld a, $80
+	ld [wTileBankZero], a
+	ld a, $00
+	ld [wTileBankZero + 1], a
+
+	ld a, 0
+	call TileLoader
+
+	; don't adjust X/Y position
+	; assume size of 6x6
+	ld a, 6
+	ld [globalMetaSprite_XSize], a
+	ld [globalMetaSprite_YSize], a
+
+	ld bc, MetaSpriteTileMap
+	ld d, 36
+	ld hl, globalMetaSprite_Tiles
+.loop:
+	ld a, [bc]
+	ld [hli], a
+	dec d
+	inc bc
+	jr nz, .loop
+
+	ld a, 1
+	ld [$2000], a ; switch back to bank 1
+
+	ret
+
+; initialises the global metasprite with a default test pattern in pos 32x32 
 InitTestMetaSprite:
 	ld a, 32
 	ld [globalMetaSprite_XPos], a
