@@ -177,13 +177,23 @@ InitialiseMainMenu:
 	call TileLoaderReset
     call SetBlankDMGPalette
 
+	; load up the test background
+	ld de, TestBackgroundTilemap
+	ld bc, TestBackgroundTilemapEnd - TestBackgroundTilemap
+	push de
+	push bc
+	ld a, 2
+	ld bc, TestBackgroundDataEnd - TestBackgroundData
+	ld de, TestBackgroundData
+	call LoadNewBackground
+
 	ld de, TestActorData
 	ld bc, TestActorDataEnd - TestActorData
 	ld a, 2 ; set the bank variable
 	call LoadToMetasprite
 
 	; set how scrolled the screen is
-	ld a, 112
+	ld a, 0
 	ld [wYScrollCounter], a
 	ld [rSCY], a
 
@@ -208,6 +218,7 @@ UpdateMainMenuScene:
     ld a, [wCurKeys]
 	and a, PADF_START
 	jp z, .CheckUpPressed
+	jp .ReloadBackground
 .CheckUpPressed:
     ld a, [wCurKeys]
 	and a, PADF_UP
@@ -239,14 +250,16 @@ UpdateMainMenuScene:
 
     jp .EndOfFunc
 
-.StartGame
-    ld a, 1
-    ld [wCurrentScene], a
-	call DisableSound
-	call EnableSound
-    ld c, 10
-    call FadeToWhite
-    jp ReloadGame
+.ReloadBackground
+	; load up the test background
+	ld de, TestBackgroundTilemap2
+	ld bc, TestBackgroundTilemap2End - TestBackgroundTilemap2
+	push de
+	push bc
+	ld a, 2
+	ld bc, TestBackground2DataEnd - TestBackground2Data
+	ld de, TestBackground2Data
+	call FadeToNewBackground
 
 .KeepScrollingScreen
 	dec a
@@ -271,6 +284,17 @@ TestSpriteDataEnd:
 AlphabetTiles: INCBIN "gfx/backgrounds/text-font.2bpp"
 AlphabetTilesEnd:
 
-	
-TestActorData: INCBIN "gfx/actors/TestActor.2bpp"
+TestBackgroundData: INCBIN "gfx/backgrounds/TestBackground.2bpp"
+TestBackgroundDataEnd: 
+
+TestBackgroundTilemap: INCBIN "gfx/backgrounds/TestBackground.tilemap"
+TestBackgroundTilemapEnd:
+
+TestBackground2Data: INCBIN "gfx/backgrounds/TestBackground2.2bpp"
+TestBackground2DataEnd:
+
+TestBackgroundTilemap2: INCBIN "gfx/backgrounds/Testbackground2.tilemap"
+TestBackgroundTilemap2End:
+
+TestActorData: INCBIN "gfx/actors/TestActor.2bppactor"
 TestActorDataEnd:

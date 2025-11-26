@@ -4,7 +4,7 @@ BACKGROUNDPNG_FILES := $(wildcard gfx/backgrounds/*.png)
 BACKGROUND2BPP_FILES := $(BACKGROUNDPNG_FILES:.png=.2bpp)
 TILEMAP_FILES := $(BACKGROUNDPNG_FILES:.png=.tilemap)
 ACTORPNG_FILES := $(wildcard gfx/actors/*.png)
-ACTOR2BPP_FILES := $(ACTORPNG_FILES:.png=.2bpp)
+ACTOR2BPP_FILES := $(ACTORPNG_FILES:.png=.2bppactor)
 
 RGBDS ?=
 RGBASM  ?= $(RGBDS)rgbasm
@@ -13,11 +13,13 @@ RGBGFX  ?= $(RGBDS)rgbgfx
 RGBLINK ?= $(RGBDS)rgblink
 
 %.2bpp: %.png
+	$(RGBGFX) $(rgbgfx) -c "#FFFFFF,#aaaaaa,#555555,#000000;" -u -o $@ $<
+	
+%.2bppactor: %.png
 	$(RGBGFX) $(rgbgfx) -c "#FFFFFF,#aaaaaa,#555555,#000000;" -Z -o $@ $<
 
 %.tilemap: %.png
 	$(RGBGFX) -c "#FFFFFF,#aaaaaa,#555555,#000000;" \
-		-Z \
 		--unique-tiles \
 		--tilemap $@ \
 		$<
@@ -42,5 +44,5 @@ clean:
 	rm gfx/*.2bpp
 	rm gfx/backgrounds/*.2bpp
 	rm gfx/backgrounds/*.tilemap
-	rm gfx/actors/*.2bpp
+	rm gfx/actors/*.2bppactor
 	rm *.o *.gb *.map *.sym

@@ -9,6 +9,10 @@ SECTION "OAM DMA CODE AREA",HRAM
 hOAMDMA:
 	ds 8;OAMDMARoutineEnd - OAMDMARoutine ; reserve space to hold the routine that lives in HRAM
 
+SECTION "HRAM Variables", HRAM
+hScratchArea:
+	ds 8; make it 8 bytes, should be plenty
+
 SECTION "OAM Shadow Map", WRAM0,ALIGN[8]
 wShadowOAM: ds 4*40						; the sprite object attribute buffer (all writes to OAM should be done here)
 
@@ -211,7 +215,8 @@ NumberToString:
 ; safely turns off the LCD
 ; @clobbers a
 DisableLCD:
-.LoopStart							; main game loop
+	push af									; save registers
+.LoopStart									; main sub loop
 	; Wait until it's *not* VBlank
 	ld a, [rLY]			; loads into the A register, the current scanline (rLY)
 	cp 144				; compares the value in the A register, against 144
@@ -231,15 +236,18 @@ DisableLCD:
 	ld a, 0
 	ld [rLCDC], a
 
+	pop af									; restore our registers
+
 	ret
 
 ; enables the LCD
-; @clobbers a
 EnableLCD:
+	push af ; save registers
 	; Turn the LCD on
 	ld a, LCDCF_ON | LCDCF_OBJ16 | LCDCF_BGON	| LCDCF_OBJON | LCDCF_BG8800 ; OR together the desired flags for LCD control
 	ld [rLCDC], a				; then push them to the LCD controller
 	
+	pop af
 	ret
 
 ; Wait for specified number of frames
@@ -438,13 +446,55 @@ TileLoader:
   	rr c
 	ret
 
-; Overwrites the current background with one from memory
-; @clobbers: a
+
+; Calls the background fades and loads a new background between them without having to do anything else manually
+; Disables the LCD as the load new background doesn't respect mode 3
 ; @stack args (push order): tilemap 16-bit address (de), tilemap 16-bit length (bc)
+; @param: a: which ROM bank the background resides in
+; @param: de: address of the tiles to load
+; @param: bc: the length of tile data to load
+; @return: bc: index of the first tile loaded via this function
+FadeToNewBackground:
+	; rearrange the stack to make sure the stack args are "on top" of the return address
+	pop hl	; grab the return address
+	push bc ; put bc onto the stack to keep it safe
+    ld b, h ; tbxhl
+	ld c, l
+	ld hl, hScratchArea
+	ld a, c
+	ld [hli], a
+	ld a, b
+	ld [hli], a
+	pop bc ; restore param bc before moving on
+
+	call QuickFadeToWhite
+	call DisableLCD
+
+	call LoadNewBackground
+	push bc						; save the return from LoadNewBackground just in case
+
+	call EnableLCD
+	call QuickFadeFromWhite
+	pop bc						; grab the return from LoadNewBackground
+
+	ld hl, hScratchArea
+	ld a, [hli]					; restore the return address
+	ld e, a
+	ld a, [hli]
+	ld d, a
+	push de						; make sure the return address is on the stack
+	ret
+
+; Overwrites the current background with one from memory (requires LCD to be off, doesn't respect mode 3)
+; @stack args (push order): tilemap 16-bit address (de), tilemap 16-bit length (bc)
+; @param: a: which ROM bank the background resides in
 ; @param: de: address of the tiles to load
 ; @param: bc: the length of tile data to load
 ; @return: bc: index of the first tile loaded via this function
 LoadNewBackground:
+	; switch bank
+	ld [$2000], a
+
 	; Copy tile data into VRAM
 	; the address of the tiles is in the DE register
 	; length of Tiles is in BC
@@ -455,12 +505,14 @@ LoadNewBackground:
 
 	; Copy tilemap data into VRAM (functionally identical to above but pointing to tilemap data and addresses)
 	; utilise the stack for more arguments
-
-	pop de; the address of the tiles is in the DE register
-	pop bc; length of Tiles is in BC
+	pop hl	; grab the return address
+	pop bc	; length of Tilemap is in BC
+	pop de	; the address of the tilemap is in the DE register
+	push hl ; put the return address back on the stack
 	ld hl, $9800				; point toward the tilemap
 	call Memcopy				; call the memcopy subroutine
-
+	ld a, 1
+	ld [$2000], a ; switch back to bank 1
 ret
 
 ; copies the OAM DMA routine to HRAM ready to be executed in the future
@@ -671,10 +723,21 @@ SetBlankDMGPalette:
 	ld [rOBP1], a
 	ret
 
+; calls fade to white with a fixed time period
+; is also register safe
+QuickFadeToWhite:
+	push af			; save registers
+	push bc
+	ld c, 3
+	call FadeToWhite
+	pop bc
+	pop af
+	ret
+
 ; manipulates the DMG palette to fade in/out
 ; stops updating the system while it happens
 ; @param c: number of frames to wait between colour changes
-; @clobbers: a, b
+; @clobbers a, b
 FadeToWhite:
 	dec c			; reduce the input by one as that's what the function expects
 	ld b, c
@@ -705,6 +768,17 @@ FadeToWhite:
 	ld a, %00000000
 	ld [rOBP0], a
 	ld [rOBP1], a
+	ret
+
+; calls fade from white with a fixed time period
+; is also register safe
+QuickFadeFromWhite:
+	push af			; save registers
+	push bc
+	ld c, 3
+	call FadeFromWhite
+	pop bc
+	pop af
 	ret
 
 ; manipulates the DMG palette to fade in/out

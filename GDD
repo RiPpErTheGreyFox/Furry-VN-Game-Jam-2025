@@ -98,10 +98,19 @@ Research a scanline interrupt at the top of the dialogue box for rendering text 
 Friday to-do:
 Upgrade the text renderer to allow any size of text box via X/Y position instead of address
 Two test scenes, one big test scene and a small one
-Test Actors made in Aseprite ready to use as a template
-Test backgrounds made in Aseprite ready for template usage
+*Test Actors made in Aseprite ready to use as a template
+*Test backgrounds made in Aseprite ready for template usage
 Metasprite Handlers (disable: sets the position way out of frame, sets all tiles to 0. destination move: used for transitions)
 
+Wednesday to-do:
+*Create test background file and make sure it imports properly
+*Create background changing functions (fade background out, fade background in, reload tiles and map)
+Finish Friday Tasks
+
+Thursday to-do:
+Write macros to make writing scenes easier/single line affairs (want to write things like: "dialogue: 'this is what I want written'" and "change_actor buck_1_happy")
+Decide on assets being in a single large file or per scene file
+Decide on scenes being headers or asm's (probably asm's)
 
 Needed for MVP:
 Basic storyboard done

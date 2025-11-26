@@ -7,4 +7,5 @@
 *.gb
 #intermediate files
 *.2bpp
+*.2bppactor
 *.tilemap
