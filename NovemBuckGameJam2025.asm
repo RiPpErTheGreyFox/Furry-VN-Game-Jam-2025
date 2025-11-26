@@ -2,6 +2,7 @@ INCLUDE "include/hardware.inc"			; include all the hardware definitions
 										; and other out of file definitions
 
 INCLUDE "include/vnEngineConstants.inc"
+INCLUDE "include/vnEngineMacros.inc"
 INCLUDE "include/vnEngineStructs.inc"	; include all the main data needed for the engine
 INCLUDE "include/vnEngineUtilitySubroutines.inc"
 INCLUDE "include/vnEngineSoundSubroutines.inc"
@@ -141,9 +142,18 @@ ProgramEntry:							; main game loop
 	ld c, 15
 	call FadeFromWhite
 
-	ld hl, wDialogueTestSTring
-	ld de, $99E1
-	call DrawTextTilesWithDelays
+	draw_text_delay 2, $99E1, "single line macro?"
+
+	set_actor_in_middle
+	force_render_update
+
+	draw_text_delay 10, $99E1, "i am speaking     "
+	draw_text_delay 30, $9A01, "very slowly"
+
+	;ld hl, wDialogueTestSTring
+	;ld de, $99E1
+	;ld b, 2
+	;call DrawTextTilesWithDelays
 
 ProgramMain:
 	; Wait until it's *not* VBlank
@@ -328,7 +338,7 @@ TestBackgroundTilemapEnd:
 TestBackground2Data: INCBIN "gfx/backgrounds/TestBackground2.2bpp"
 TestBackground2DataEnd:
 
-TestBackgroundTilemap2: INCBIN "gfx/backgrounds/Testbackground2.tilemap"
+TestBackgroundTilemap2: INCBIN "gfx/backgrounds/TestBackground2.tilemap"
 TestBackgroundTilemap2End:
 
 TestActorData: INCBIN "gfx/actors/DoeStanding.2bppactor"

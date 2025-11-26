@@ -178,9 +178,11 @@ DrawTextTilesLoop:
 ; Draws text with a delay and sound, giving a typewriter like effect
 ; @param de: address of the first tile to start writing to
 ; @param hl: pointer to the address containing the literal string
+; @param c: number of frames between letters to wait
 ; @clobbers a
 DrawTextTilesWithDelays:
-	ld b, 2				; wait for a few frames in between drawing text
+	ld b, c
+	; param b is fed directly into WaitFrames
 	call WaitFrames
 	; check for the end of string character (255/$FF)
 	ld a, [hl]
