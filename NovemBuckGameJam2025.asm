@@ -112,6 +112,7 @@ ProgramEntry:							; main game loop
 	call ClearShadowOAM
 
 	call InitTestMetaSprite
+	call HideMetasprite
 
 	; once the OAM is clear, we can draw an object by writing its properties
 	call SetDefaultDMGPalette
@@ -129,7 +130,7 @@ ProgramEntry:							; main game loop
 	jp .FinishedLoadingScene
 .FinishedLoadingScene
 
-	call InitialiseFont
+	call InitialiseFontFixedAddress
 
 	; Initialise variables
 	ld a, 0
@@ -139,6 +140,10 @@ ProgramEntry:							; main game loop
 
 	ld c, 15
 	call FadeFromWhite
+
+	ld hl, wDialogueTestSTring
+	ld de, $99E1
+	call DrawTextTilesWithDelays
 
 ProgramMain:
 	; Wait until it's *not* VBlank
@@ -303,6 +308,8 @@ UpdateMainMenuScene:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 SECTION "SceneData", ROMX
+
+wDialogueTestSTring: db "this is a test",255
 
 SECTION "Graphics Data", ROMX, BANK[2]
 

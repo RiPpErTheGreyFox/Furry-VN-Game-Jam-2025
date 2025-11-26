@@ -113,16 +113,39 @@ InitialiseFont:
 
 	ld de, AlphabetTiles
 	ld bc, AlphabetTilesEnd - AlphabetTiles
-	ld a, 0
+	ld a, 1
 
 	call TileLoader
-
 	
 	; Swap back to bank 1
 	ld a, 1
 	ld [$2000], a
 
 	ld a, c
+	ld [wFontFirstTileOffset], a
+
+	ret
+
+; Load Text font into VRAM for future use
+; This version places the font at the very end of the tile bank to allow the normal tile loader more space
+; @clobbers a, bc, de, hl
+InitialiseFontFixedAddress:
+	
+	; Swap bank to bank 2
+	ld a, 2
+	ld [$2000], a
+
+	ld de, AlphabetTiles
+	ld bc, AlphabetTilesEnd - AlphabetTiles
+	ld hl, $8CD0
+
+	call Memcopy
+	
+	; Swap back to bank 1
+	ld a, 1
+	ld [$2000], a
+
+	ld a, 205
 	ld [wFontFirstTileOffset], a
 
 	ret
@@ -704,6 +727,28 @@ ld hl, wShadowOAM + 2
     ;    bytes 36, Tiles ; tile indices
     ;end_struct
 
+	ret
+
+; moves the metasprite directly off screen to hide it, doesn't fully disable it but just ensures we can't see it
+HideMetasprite:
+	push bc								; save the registers so we don't clobber anything
+	ld b, 168							; set the X/Y values to pass for the paramater
+	ld c, 160							; to the called function
+	call SetMetaspritePosition
+	pop bc								; restore the registers
+	ret
+
+; sets the position of the global metasprite
+; hard sets without any transition or interpolation
+; @params b: new X position
+; @params c: new Y position
+SetMetaspritePosition:
+	push hl
+	ld hl, globalMetaSprite_XPos
+	ld [hl],b
+	ld hl, globalMetaSprite_YPos
+	ld [hl],c
+	pop hl
 	ret
 
 ; sets the basic 4 shade palette on the background and both objects
