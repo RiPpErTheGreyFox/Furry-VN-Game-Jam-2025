@@ -105,12 +105,15 @@ Metasprite Handlers (disable: sets the position way out of frame, sets all tiles
 Wednesday to-do:
 *Create test background file and make sure it imports properly
 *Create background changing functions (fade background out, fade background in, reload tiles and map)
+*Grab one of the actors from the provided assets and convert to gameboy
 Finish Friday Tasks
 
 Thursday to-do:
 Write macros to make writing scenes easier/single line affairs (want to write things like: "dialogue: 'this is what I want written'" and "change_actor buck_1_happy")
 Decide on assets being in a single large file or per scene file
 Decide on scenes being headers or asm's (probably asm's)
+Look into window renderer for rendering text (make it easier to show/hide)
+Transfer text renderering into tile renderering
 
 Needed for MVP:
 Basic storyboard done

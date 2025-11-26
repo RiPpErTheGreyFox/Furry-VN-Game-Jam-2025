@@ -9,3 +9,6 @@
 *.2bpp
 *.2bppactor
 *.tilemap
+
+#source files that we're not using
+*.psd

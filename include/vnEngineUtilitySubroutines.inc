@@ -52,7 +52,7 @@ MemcopyNoMode3:
 	dec bc						; decrement the counter in BC
 	ld a, b						; load register B's data into the Accumulator
 	or a, c						; OR it with C to check if both bytes are 0
-	jp nz, Memcopy				; loop if not zero
+	jp nz, MemcopyNoMode3		; loop if not zero
 
 	ret
 
@@ -378,7 +378,7 @@ TileLoader:
 	ld a, [wTileBankZero + 1]				; now the LSB
 	ld l, a									; into the L register
 	push hl									; store the current address onto the stack
-	call Memcopy							; call the memcopy subroutine
+	call MemcopyNoMode3						; call the memcopy subroutine
 	ld a, h									
 	ld [wTileBankZero], a					; store the address of the next free tile
 	ld a, l									
@@ -399,7 +399,7 @@ TileLoader:
 	ld a, [wTileBankOne + 1]
 	ld l, a
 	push hl
-	call Memcopy				; call the memcopy subroutine
+	call MemcopyNoMode3						; call the memcopy subroutine
 	ld a, h
 	ld [wTileBankOne], a
 	ld a, l
@@ -420,7 +420,7 @@ TileLoader:
 	ld a, [wTileBankTwo + 1]
 	ld l, a
 	push hl
-	call Memcopy				; call the memcopy subroutine
+	call MemcopyNoMode3						; call the memcopy subroutine
 	ld a, h
 	ld [wTileBankTwo], a
 	ld a, l
@@ -577,6 +577,7 @@ LoadToMetasprite:
 	ld hl, globalMetaSprite_Tiles
 .loop:
 	ld a, [bc]
+	call WaitNoMode3
 	ld [hli], a
 	dec d
 	inc bc

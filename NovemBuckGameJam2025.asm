@@ -187,6 +187,7 @@ InitialiseMainMenu:
 	ld de, TestBackgroundData
 	call LoadNewBackground
 
+	; setup the actor with a default sprite
 	ld de, TestActorData
 	ld bc, TestActorDataEnd - TestActorData
 	ld a, 2 ; set the bank variable
@@ -217,8 +218,18 @@ UpdateMainMenuScene:
 
     ld a, [wCurKeys]
 	and a, PADF_START
-	jp z, .CheckUpPressed
+	jp z, .CheckAPressed
 	jp .ReloadBackground
+.CheckAPressed:
+	ld a, [wCurKeys]
+	and a, PADF_A
+	jp z, .CheckBPressed
+	jp .ChangeActorToStanding
+.CheckBPressed:
+	ld a,[wCurKeys]
+	and a, PADF_B
+	jp z, .CheckUpPressed
+	jp .ChangeActorToTalking
 .CheckUpPressed:
     ld a, [wCurKeys]
 	and a, PADF_UP
@@ -260,6 +271,23 @@ UpdateMainMenuScene:
 	ld bc, TestBackground2DataEnd - TestBackground2Data
 	ld de, TestBackground2Data
 	call FadeToNewBackground
+	ret
+
+.ChangeActorToStanding
+	; setup the actor with a default sprite
+	ld de, TestActorData
+	ld bc, TestActorDataEnd - TestActorData
+	ld a, 2 ; set the bank variable
+	call LoadToMetasprite
+
+	ret
+.ChangeActorToTalking
+	; setup the actor with a default sprite
+	ld de, TestActor2Data
+	ld bc, TestActor2DataEnd - TestActor2Data
+	ld a, 2 ; set the bank variable
+	call LoadToMetasprite
+	ret
 
 .KeepScrollingScreen
 	dec a
@@ -296,5 +324,8 @@ TestBackground2DataEnd:
 TestBackgroundTilemap2: INCBIN "gfx/backgrounds/Testbackground2.tilemap"
 TestBackgroundTilemap2End:
 
-TestActorData: INCBIN "gfx/actors/TestActor.2bppactor"
+TestActorData: INCBIN "gfx/actors/DoeStanding.2bppactor"
 TestActorDataEnd:
+
+TestActor2Data: INCBIN "gfx/actors/DoeTalking.2bppactor"
+TestActor2DataEnd:
