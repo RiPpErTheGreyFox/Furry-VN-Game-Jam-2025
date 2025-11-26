@@ -48,4 +48,21 @@ MACRO force_render_update
     call WaitFrames
 ENDM
 
+; sets up and fades into a new background
+; @params 1: which ROM bank the new background resides in (will be switched back to 1 when finished just to keep a sane state)
+; @params 2: pointer to tile data of new background
+; @params 3: pointer to the end of the tile data of new background
+; @params 4: pointer to the tilemap of the new background
+; @params 5: pointer to the end of the tilemap of the new background
+MACRO fade_to_new_background
+    ld de, \4
+	ld bc, \5 - \4
+	push de
+	push bc
+	ld a, \1                            ; bank number
+	ld bc, \3 - \2
+	ld de, \2
+	call FadeToNewBackground
+ENDM
+
     ENDC ;VNENGINEMACROS_INC

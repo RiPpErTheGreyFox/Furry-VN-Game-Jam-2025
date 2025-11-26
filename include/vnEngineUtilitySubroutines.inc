@@ -483,6 +483,7 @@ FadeToNewBackground:
 	; rearrange the stack to make sure the stack args are "on top" of the return address
 	pop hl	; grab the return address
 	push bc ; put bc onto the stack to keep it safe
+	push af
     ld b, h ; tbxhl
 	ld c, l
 	ld hl, hScratchArea
@@ -490,6 +491,7 @@ FadeToNewBackground:
 	ld [hli], a
 	ld a, b
 	ld [hli], a
+	pop af
 	pop bc ; restore param bc before moving on
 
 	call QuickFadeToWhite

@@ -277,15 +277,10 @@ UpdateMainMenuScene:
     jp .EndOfFunc
 
 .ReloadBackground
-	; load up the test background
-	ld de, TestBackgroundTilemap2
-	ld bc, TestBackgroundTilemap2End - TestBackgroundTilemap2
-	push de
-	push bc
-	ld a, 2
-	ld bc, TestBackground2DataEnd - TestBackground2Data
-	ld de, TestBackground2Data
-	call FadeToNewBackground
+	; load up the second test background
+	fade_to_new_background 2, TestBackground2Data, TestBackground2DataEnd, TestBackgroundTilemap2, TestBackgroundTilemap2End
+	draw_text_delay 10, $99E1, "wow a new place"
+
 	ret
 
 .ChangeActorToStanding
