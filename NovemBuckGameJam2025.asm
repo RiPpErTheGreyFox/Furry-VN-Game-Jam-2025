@@ -142,18 +142,20 @@ ProgramEntry:							; main game loop
 	ld c, 15
 	call FadeFromWhite
 
-	draw_text_delay 2, $99E1, "single line macro?"
-
 	set_actor_in_middle
-	force_render_update
 
-	draw_text_delay 10, $99E1, "i am speaking     "
-	draw_text_delay 30, $9A01, "very slowly"
+	ld b, 100
+	ld c, 100
+	ld d, 1
+	ld e, 1
+	call MoveMetaspriteToPosition
+	
+	;draw_text_delay 2, $99E1, "single line macro?"
 
-	;ld hl, wDialogueTestSTring
-	;ld de, $99E1
-	;ld b, 2
-	;call DrawTextTilesWithDelays
+	;force_render_update
+
+	;draw_text_delay 10, $99E1, "i am speaking     "
+	;draw_text_delay 30, $9A01, "very slowly"
 
 ProgramMain:
 	; Wait until it's *not* VBlank

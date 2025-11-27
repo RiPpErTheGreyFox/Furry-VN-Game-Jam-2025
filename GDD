@@ -96,11 +96,11 @@ Transitions that consist of either fading in/out (backgrounds) or sliding in/out
 Research a scanline interrupt at the top of the dialogue box for rendering text using objects
 
 Friday to-do:
-Upgrade the text renderer to allow any size of text box via X/Y position instead of address
+-Upgrade the text renderer to allow any size of text box via X/Y position instead of address
 Two test scenes, one big test scene and a small one
 *Test Actors made in Aseprite ready to use as a template
 *Test backgrounds made in Aseprite ready for template usage
-Metasprite Handlers (disable: sets the position way out of frame, sets all tiles to 0. destination move: used for transitions)
+*Metasprite Handlers (hide: sets the position way out of frame. destination move: used for transitions)
 
 Wednesday to-do:
 *Create test background file and make sure it imports properly
@@ -113,7 +113,6 @@ Write macros to make writing scenes easier/single line affairs (want to write th
 Decide on assets being in a single large file or per scene file
 Decide on scenes being headers or asm's (probably asm's)
 Look into window renderer for rendering text (make it easier to show/hide)
-Transfer text renderering into tile renderering
 
 Needed for MVP:
 Basic storyboard done

@@ -275,6 +275,20 @@ EnableLCD:
 	pop af
 	ret
 
+; Waits for the specified number of frames but keeps updating the sound and rendering libraries while at it
+; param b: Number of frames to wait/update
+WaitFramesWithUpdate:
+	push bc
+	call RenderMetaSprite
+    
+    call hUGE_dosound
+
+    pop bc
+    call WaitFrames
+	ld a, HIGH(wShadowOAM)
+	call hOAMDMA
+	ret
+
 ; Wait for specified number of frames
 ; @param b: Number of frames to wait, gets dec'd at the start so add 1 to the input of param
 ; @clobbers: a
@@ -633,6 +647,7 @@ InitTestMetaSprite:
 	ret
 
 ; renders the entirety of the global metasprite
+; @clobbers af,bc,de,hl
 RenderMetaSprite:
 	; use hl for OAM index
 	; set two registers to the X/Y position
@@ -753,6 +768,82 @@ SetMetaspritePosition:
 	ld hl, globalMetaSprite_YPos
 	ld [hl],c
 	pop hl
+	ret
+
+; move metasprite to a desired position over time (make sure current and new position are divisible by step amount)
+; @params b: new X position
+; @params c: new Y position
+; @params d: time between steps
+; @params e: step amount
+; @clobbers a, hl
+MoveMetaspriteToPosition:
+	; check if we're at the position we're supposed to be
+	; check X for X
+	ld hl, globalMetaSprite_XPos
+	ld a, b
+	cp a, [hl]
+	jp z, .YMovement					; skip to Y movement if Equal
+.XMovement
+	; if X is above destination then move by step amount
+	ld hl, globalMetaSprite_XPos
+	ld a, b
+	cp a, [hl]
+	jp c, .MoveLeft
+	; if X is below destination then move by step amount
+.MoveRight:
+	ld a, [hl]
+	add e
+	ld [hl], a
+	jp .YMovement						; we're done, jump to the Y checks
+.MoveLeft:
+	ld a, [hl]
+	sub e
+	ld [hl], a
+.YMovement:
+	; check Y for Y
+	ld hl, globalMetaSprite_YPos
+	ld a, c
+	cp a, [hl]
+	jp z, .LoopCheck
+	; if Y is above destination then move by step amount
+	ld hl, globalMetaSprite_YPos
+	ld a, c
+	cp a, [hl]
+	jp c, .MoveUp
+	; if Y is below destination then move by step amount
+.MoveDown:
+	ld a, [hl]
+	add e
+	ld [hl], a
+	jp .LoopCheck						; we're done, jump to the Loop checks
+.MoveUp:
+	ld a, [hl]
+	sub e
+	ld hl, globalMetaSprite_XPos
+	ld [hl], a
+.LoopCheck
+	; check if both X/Y are where it's supposed to be
+	; if so end func, otherwise loop and start again
+	; Check X
+	ld hl, globalMetaSprite_XPos
+	ld a, b
+	cp a, [hl]
+	jp nz, .Loop
+	; Check Y
+	ld hl, globalMetaSprite_YPos
+	ld a, c
+	cp a, [hl]
+	jp nz, .Loop
+	jp .EndFunc							; both have fallen through, we're done
+.Loop
+	push bc
+	push de
+	ld b, e
+	call WaitFramesWithUpdate
+	pop de
+	pop bc
+	jp MoveMetaspriteToPosition
+.EndFunc
 	ret
 
 ; sets the basic 4 shade palette on the background and both objects
