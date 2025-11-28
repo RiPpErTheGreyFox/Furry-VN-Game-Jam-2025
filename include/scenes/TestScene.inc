@@ -104,7 +104,7 @@ RunTestScene:
 ;;	BLOCK
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-SECTION "Graphics Data", ROMX, BANK[2]
+SECTION "TestScene Graphics Data", ROMX, BANK[2]
 
 TestSpriteData: INCBIN "gfx/spritesheettest.2bpp"
 TestSpriteDataEnd:
