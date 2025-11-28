@@ -87,17 +87,18 @@ Immediate To-do:
 *Implement OAM DMA copying routine for better metasprite handling
 *Research and implement MBC5 mapping
 *Test MBC5 mapping by placing a test image on a different bank and rendering it
-Come up with a scene format that will work
+*Come up with a scene format that will work
 *Test loading 6*6 metaobjects and moving them around to see how DMG handles that much data
 Try flipping through animations with it (animation handler needed)
-Implement a test scene without the correct formatting to ensure basic engine works
-Slowly move the aboves entire setup into the decided format
+*Implement a test scene without the correct formatting to ensure basic engine works
+*Slowly move the aboves entire setup into the decided format
 Transitions that consist of either fading in/out (backgrounds) or sliding in/out from left/right (OAMs)
 Research a scanline interrupt at the top of the dialogue box for rendering text using objects
 
 Friday to-do:
 -Upgrade the text renderer to allow any size of text box via X/Y position instead of address
-Two test scenes, one big test scene and a small one
+*Two test scenes, one big test scene and a small one
+    ^ broke scene out into it's own file format, only one needed
 *Test Actors made in Aseprite ready to use as a template
 *Test backgrounds made in Aseprite ready for template usage
 *Metasprite Handlers (hide: sets the position way out of frame. destination move: used for transitions)
@@ -109,16 +110,18 @@ Wednesday to-do:
 Finish Friday Tasks
 
 Thursday to-do:
-Write macros to make writing scenes easier/single line affairs (want to write things like: "dialogue: 'this is what I want written'" and "change_actor buck_1_happy")
-Decide on assets being in a single large file or per scene file
-Decide on scenes being headers or asm's (probably asm's)
+*Write macros to make writing scenes easier/single line affairs (want to write things like: "dialogue: 'this is what I want written'" and "change_actor buck_1_happy")
+*Decide on assets being in a single large file or per scene file
+    ^ assets per scene
+*Decide on scenes being headers or asm's (probably asm's)
+    ^ header format
 Look into window renderer for rendering text (make it easier to show/hide)
 
 Needed for MVP:
 Basic storyboard done
 House layout done
 Design bible finished
-VN Engine that allows easy insertion of scenes and their data into a source file
+*VN Engine that allows easy insertion of scenes and their data into a source file
 Make an index of every scene and it's interactions?
 A single route through the story, one ending, one path
 
