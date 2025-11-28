@@ -115,21 +115,12 @@ ProgramEntry:							; main game loop
 	call InitTestMetaSprite
 	call HideMetasprite
 
+	call TileLoaderReset
+    call SetBlankDMGPalette
+
 	; once the OAM is clear, we can draw an object by writing its properties
 	call SetDefaultDMGPalette
 	call LoadDefaultCGBPalette
-	
-	; check which scene is gunna be loaded and load that
-	; 0=MainMenu, 1=Cutscene, 2=HowToPlay, 3=Game
-	ld a, [wCurrentScene]
-	cp a, 0
-	jp z, .MainMenuLoading
-	
-
-.MainMenuLoading
-	call InitialiseMainMenu
-	jp .FinishedLoadingScene
-.FinishedLoadingScene
 
 	call InitialiseFontFixedAddress
 
@@ -138,24 +129,7 @@ ProgramEntry:							; main game loop
 	ld [wButtonDebounce], a
 
 	call EnableLCD
-
-	ld c, 15
-	call FadeFromWhite
-
-	set_actor_in_middle
-
-	ld b, 100
-	ld c, 100
-	ld d, 1
-	ld e, 1
-	call MoveMetaspriteToPosition
 	
-	;draw_text_delay 2, $99E1, "single line macro?"
-
-	;force_render_update
-
-	;draw_text_delay 10, $99E1, "i am speaking     "
-	;draw_text_delay 30, $9A01, "very slowly"
 
 ProgramMain:
 	; Wait until it's *not* VBlank
@@ -174,15 +148,13 @@ ProgramMain:
 
 	call RenderMetaSprite
 
-	; check which scene we're on and tick that
-	; 0=MainMenu, 1=Cutscene, 2=HowToPlay, 3=Game
-	ld a, [wCurrentScene]
-	cp a, 0
-	jp z, .MainMenuTick
+	call DisableSound
+	call EnableSound
 
-.MainMenuTick
-	call UpdateMainMenuScene
-	jp .FinishedTickingScene
+	; start running through all the scenes
+	; here we just have the big pile of every scene
+	call InitialiseTestScene
+	call RunTestScene
 .FinishedTickingScene
 
 jp ProgramMain
@@ -190,10 +162,8 @@ jp ProgramMain
 ; Test subs, TODO: delete
 
 ; placeholder init sub for testing the base program works
-InitialiseMainMenu:
-	call TileLoaderReset
-    call SetBlankDMGPalette
-
+InitialiseTestScene:
+	call DisableLCD
 	; load up the test background
 	ld de, TestBackgroundTilemap
 	ld bc, TestBackgroundTilemapEnd - TestBackgroundTilemap
@@ -210,6 +180,8 @@ InitialiseMainMenu:
 	ld a, 2 ; set the bank variable
 	call LoadToMetasprite
 
+	set_actor_in_middle
+
 	; set how scrolled the screen is
 	ld a, 0
 	ld [wYScrollCounter], a
@@ -219,12 +191,26 @@ InitialiseMainMenu:
 	ld hl, mainmenu_song
 	call hUGE_init
 
+	call EnableLCD
+
 	ret
 
 ; placeholder tick sub for testing the base program works
-UpdateMainMenuScene:
-	; tick the music driver for the frame
-	call hUGE_dosound
+RunTestScene:
+
+	draw_text_delay 2, $99E1, "single line macro?"
+
+	force_render_update
+
+	draw_text_delay 10, $99E1, "i am speaking     "
+	draw_text_delay 30, $9A01, "very slowly"
+
+
+	ld b, 100
+	ld c, 100
+	ld d, 1
+	ld e, 1
+	call MoveMetaspriteToPosition
 
 	; check if the scroll counter is above zero, if it is, scroll up 1
 	ld a, [wYScrollCounter]
