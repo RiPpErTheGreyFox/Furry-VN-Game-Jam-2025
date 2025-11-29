@@ -48,6 +48,21 @@ MACRO force_render_update
     call WaitFrames
 ENDM
 
+; loads the param into band calls WaitFrames, register safe because pushes everything to the stack
+; @params \1: number of frames to wait for (minimum 1)
+MACRO delay_frames
+    push af
+    push bc
+    push de
+    push hl
+    ld b, \1
+    call WaitFramesWithUpdate
+    pop hl
+    pop de
+    pop bc
+    pop af
+ENDM
+
 ; sets up and fades into a new background
 ; @params 1: which ROM bank the new background resides in (will be switched back to 1 when finished just to keep a sane state)
 ; @params 2: pointer to tile data of new background

@@ -6,6 +6,42 @@ rooms: bedroom, study, stairwell down, stairwell up, kitchen, loungeroom, outsid
 objects: computer, broken glass on ground, front door, knocked over something else, house phone, bedroom door, inside bedroom
 characters: police officer, Louise (Doe), Others?, Monster
 
+List of assets needed:
+Actors:
+Doe - Roommate - talking/standing
+Monster full view - facing you
+Monster full view - reaching out
+Monster full view - turned away
+Monster peeking around corner
+Monster outside window
+
+Scenes:
+Computer being used
+Bedroom
+Hiding under bed
+Lying in bed looking at ceiling
+Stairwell Down
+Stairwell Down - broken vase on ground
+Kitchen - missing glass
+Kitchen - with glass
+Broken glass close up
+Black Background
+Main Menu
+
+Sounds:
+TalkingNarrator
+TalkingRoommate - different pitch
+BreakingSoundGlass
+HorrorStinger
+
+Sounds Stretch:
+TypingSound
+BreakingSoundVase
+FootstepsSound
+MonsterGrowls
+
+
+
 basic flow
 Room mate leaves for the weekend
 Go on IRC and talk to someone about a monster
@@ -21,3 +57,68 @@ give option to hide a few times
 after a broken window give option to call the police or the roommate back
 if police are called, then nothing happens
 if room mate is called you see her get grabbed when she leaves again
+
+
+Story Board:
+
+Chapter 1:
+*introduction scene*
+-show black background
+You ever see something weird?
+
+Something so unexplainable
+That no one believes you?
+
+That was me, almost 20 years ago
+*end introduction*
+
+*setting the scene*
+I was living near the college both my roommate and I went to
+
+It was just a quiet area with a bunch of other deer around, so I guess it felt familiar
+
+In fact my roommate was a deer too
+*end setting the scene*
+
+*room mate talks to you and leaves*
+Hi, I leave for weekend, bye
+
+okay bye
+
+*roommate leaves*
+*end room mate talks to you and leaves*
+
+Scene Collection 2:
+*walk around the house to get the layout*
+Wow, whole house to myself, crazy
+I look at kitchen, I look at other stuff around house, I look at bedroom
+*end walk around the house to get the layout*
+
+*go up to room*
+*talk on IRC*
+*get told about le creachur*
+
+Scene Collection 3:
+*hear a noise*
+*go downstairs find broken glass*
+*clean it up go back upstairs*
+*check computer again and say what happened*
+*other person says oh good, maybe it's coming for you now instead*
+
+Scene Collection 4:
+*hear vase break and go look down the stairs*
+*decide to go to bed because obviously imagining shit*
+*laying in bed hear another noise*
+*go look down stairs, monster is down there peeking around corner*
+*immediately go to hide under the bed*
+*monster is outside looking away, before turning back, reaching out again*
+*room mate comes home yelling about the vase*
+*get back up into bedroom scene, talking to room mate*
+*room mate doesn't believe*
+
+*ending*
+There's just one problem though
+It's still hunting me to this day, because it only hunts people who know about it
+Luckily it usually goes for whoever was the last person who heard about it
+Sure hope you got a friend to tell about it
+*end ending*

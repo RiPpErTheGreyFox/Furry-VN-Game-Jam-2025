@@ -107,7 +107,7 @@ Wednesday to-do:
 *Create test background file and make sure it imports properly
 *Create background changing functions (fade background out, fade background in, reload tiles and map)
 *Grab one of the actors from the provided assets and convert to gameboy
-Finish Friday Tasks
+*Finish Friday Tasks
 
 Thursday to-do:
 *Write macros to make writing scenes easier/single line affairs (want to write things like: "dialogue: 'this is what I want written'" and "change_actor buck_1_happy")
@@ -116,6 +116,19 @@ Thursday to-do:
 *Decide on scenes being headers or asm's (probably asm's)
     ^ header format
 Look into window renderer for rendering text (make it easier to show/hide)
+
+Saturday/Sunday to-do:
+function/macro that draws a textbox
+function/macro that clears a textbox
+function/macro that replaces the textbox with the original tiles beneath
+flashing A in corner while waiting for A function
+*Updated background loader to allow more than 128 tiles
+
+Finish first pass of story with placeholders
+Finish second pass of story
+
+*Finish first pass of art
+Do second pass
 
 Needed for MVP:
 Basic storyboard done

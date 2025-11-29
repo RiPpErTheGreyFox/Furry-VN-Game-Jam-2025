@@ -162,53 +162,13 @@ ProgramMain:
 
 jp ProgramMain
 
-; Test subs, TODO: delete
-
-; placeholder init sub for testing the base program works
-InitialiseTestScene:
-	call DisableLCD
-	; load up the test background
-	ld de, TestBackgroundTilemap
-	ld bc, TestBackgroundTilemapEnd - TestBackgroundTilemap
-	push de
-	push bc
-	ld a, 2
-	ld bc, TestBackgroundDataEnd - TestBackgroundData
-	ld de, TestBackgroundData
-	call LoadNewBackground
-
-	; setup the actor with a default sprite
-	ld de, TestActorData
-	ld bc, TestActorDataEnd - TestActorData
-	ld a, 2 ; set the bank variable
-	call LoadToMetasprite
-
-	set_actor_in_middle
-
-	; set how scrolled the screen is
-	ld a, 0
-	ld [wYScrollCounter], a
-	ld [rSCY], a
-
-	; initialise the sound driver and start the song
-	ld hl, mainmenu_song
-	call hUGE_init
-
-	call EnableLCD
-
-	ret
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;	DATA
 ;;	BLOCK
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-SECTION "SceneData", ROMX
-
-wDialogueTestSTring: db "this is a test",255
-
-SECTION "Graphics Data", ROMX, BANK[2]
+SECTION "Font Data", ROMX, BANK[1]
 
 AlphabetTiles: INCBIN "gfx/backgrounds/text-font.2bpp"
 AlphabetTilesEnd:

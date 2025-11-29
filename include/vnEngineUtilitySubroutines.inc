@@ -107,8 +107,8 @@ RandomNumberFour:
 ; @clobbers a, bc, de, hl
 InitialiseFont:
 	
-	; Swap bank to bank 2
-	ld a, 2
+	; Swap bank to bank 1
+	ld a, 1
 	ld [$2000], a
 
 	ld de, AlphabetTiles
@@ -132,7 +132,7 @@ InitialiseFont:
 InitialiseFontFixedAddress:
 	
 	; Swap bank to bank 2
-	ld a, 2
+	ld a, 1
 	ld [$2000], a
 
 	ld de, AlphabetTiles
@@ -183,7 +183,11 @@ DrawTextTilesLoop:
 DrawTextTilesWithDelays:
 	ld b, c
 	; param b is fed directly into WaitFrames
-	call WaitFrames
+	push de
+	push hl
+	call WaitFramesWithUpdate
+	pop hl
+	pop de
 	; check for the end of string character (255/$FF)
 	ld a, [hl]
 	cp 255
@@ -526,6 +530,18 @@ FadeToNewBackground:
 	push de						; make sure the return address is on the stack
 	ret
 
+; Compares BC and HL
+; BC  > HL ⇒  Cy=0, Z=0
+; BC == HL ⇒  Cy=0, Z=1
+; BC  < HL ⇒  Cy=1, Z=0
+sixteenBitCompare:
+	ld a, b
+	cp h
+	ret nz
+	ld a, c
+	cp l
+	ret
+
 ; Overwrites the current background with one from memory (requires LCD to be off, doesn't respect mode 3)
 ; @stack args (push order): tilemap 16-bit address (de), tilemap 16-bit length (bc)
 ; @param: a: which ROM bank the background resides in
@@ -536,6 +552,31 @@ LoadNewBackground:
 	; switch bank
 	ld [$2000], a
 
+	; check if length is above $800, if so then copy anything above that to $8800 (bank 1)
+	; for supporting more than 128 tiles
+	push hl
+	ld hl, $0800
+	call sixteenBitCompare
+	pop hl
+	jp c, .Bank2Copy			; if A < B
+	jp z, .Bank2Copy			; if A = B
+
+.Bank1Copy
+	;pop hl						; return hl regardless of conditional jump above
+	push de						; index by $800
+	ld a, $08
+	add d
+	ld d, a
+	ld a, b						; take $08 out the MSB
+	sub $08
+	ld b, a
+	ld hl, $8800				; set the destination to bank 2
+	call Memcopy
+	pop de						; restore original starting address
+	ld bc, $800					; reset the count to a full bank 2 amount
+
+.Bank2Copy
+	;pop hl						; return hl regardless of conditional jump above
 	; Copy tile data into VRAM
 	; the address of the tiles is in the DE register
 	; length of Tiles is in BC
