@@ -87,11 +87,6 @@ RunTestScene:
 	delay_frames 60
 	draw_text_delay 10, $99E1, "titlescene"
 	delay_frames 60
-	
-	fade_to_new_background 1, TestBackgroundData, TestBackgroundDataEnd, TestBackgroundTilemap, TestBackgroundTilemapEnd
-	delay_frames 60
-	draw_text_delay 10, $99E1, "testbackground"
-	delay_frames 60
 
 	ret
 

@@ -1072,7 +1072,7 @@ MoveMetaspriteToPosition:
 .MoveUp:
 	ld a, [hl]
 	sub e
-	ld hl, globalMetaSprite_XPos
+	ld hl, globalMetaSprite_YPos
 	ld [hl], a
 .LoopCheck
 	; check if both X/Y are where it's supposed to be

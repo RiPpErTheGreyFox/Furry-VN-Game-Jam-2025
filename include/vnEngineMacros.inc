@@ -48,15 +48,40 @@ ENDM
 ; @params 1: X position
 ; @params 2: Y position
 MACRO set_actor_pos
-    ld c, \1
-    ld b, \2
+    ld b, \1
+    ld c, \2
     call SetMetaspritePosition
 ENDM
 
+; animates an actor to their new position
+; @params 1: X position
+; @params 2: Y position
+; @params 3: time between steps
+; @params 4: step amount
+MACRO move_actor_to_pos
+	ld b, \1
+	ld c, \2
+	ld d, \3
+	ld e,\4
+	call MoveMetaspriteToPosition
+ENDM
+
+; loads a new metasprite
+; @params 1: bank the actor resides in
+; @params 2: address of the tile data
+; @params 3: size of the tile data
+MACRO load_new_actor
+	ld de, \2
+	ld bc, \3
+	ld a, \1
+	call LoadToMetasprite
+ENDM
+	
+
 ; hard sets the actor position to the centre of the screen
 MACRO set_actor_in_middle
-    ld c, 32
     ld b, 64
+    ld c, 32
     call SetMetaspritePosition
 ENDM
 
@@ -101,6 +126,23 @@ MACRO fade_to_new_background
 	ld bc, \3 - \2
 	ld de, \2
 	call FadeToNewBackground
+ENDM
+
+; sets up and loads a new background
+; @params 1: which ROM bank the new background resides in (will be switched back to 1 when finished just to keep a sane state)
+; @params 2: pointer to tile data of new background
+; @params 3: pointer to the end of the tile data of new background
+; @params 4: pointer to the tilemap of the new background
+; @params 5: pointer to the end of the tilemap of the new background
+MACRO load_new_background
+    ld de, \4
+	ld bc, \5 - \4
+	push de
+	push bc
+	ld a, \1                            ; bank number
+	ld bc, \3 - \2
+	ld de, \2
+	call LoadNewBackground
 ENDM
 
 ; hides the text box and replaces the tiles under it with the tiles from the current level

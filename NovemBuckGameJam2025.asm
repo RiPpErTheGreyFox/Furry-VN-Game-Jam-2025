@@ -8,7 +8,14 @@ INCLUDE "include/vnEngineUtilitySubroutines.inc"
 INCLUDE "include/vnEngineSoundSubroutines.inc"
 
 ; Scene files
+INCLUDE "include/scenes/TitleScene.inc"
 INCLUDE "include/scenes/IntroScene.inc"
+INCLUDE "include/scenes/SettingTheScene.inc"
+INCLUDE "include/scenes/HouseWalkaroundScene.inc"
+INCLUDE "include/scenes/FirstComputerScene.inc"
+INCLUDE "include/scenes/GlassBreakScene.inc"
+INCLUDE "include/scenes/MonsterSpottedScene.inc"
+INCLUDE "include/scenes/EndingScene.inc"
 INCLUDE "include/scenes/TestScene.inc"
 
 ; gameplay definitions
@@ -161,7 +168,14 @@ ProgramMain:
 	; start running through all the scenes
 	; here we just have the big pile of every scene
 	;call RunTestScene
+	call RunTitleScene
 	call RunIntroScene
+	call RunSettingTheScene
+	call RunHouseWalkaroundScene
+	call RunFirstComputerScene
+	call RunGlassBreakScene
+	call RunMonsterSpottedScene
+	call RunEndingScene
 .FinishedTickingScene
 
 jp ProgramMain
@@ -184,22 +198,6 @@ TextBoxTilesEnd:
 ;;	GAME DATA
 ;;	BLOCK
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-SECTION "TestScene Graphics Data", ROMX, BANK[1]
-
-TestSpriteData: INCBIN "gfx/spritesheettest.2bpp"
-TestSpriteDataEnd:
-
-TestBackgroundData: INCBIN "gfx/backgrounds/TestBackground.2bpp"
-TestBackgroundDataEnd: 
-TestBackgroundTilemap: INCBIN "gfx/backgrounds/TestBackground.tilemap"
-TestBackgroundTilemapEnd:
-
-TestActorData: INCBIN "gfx/actors/DoeStanding.2bppactor"
-TestActorDataEnd:
-
-TestActor2Data: INCBIN "gfx/actors/DoeTalking.2bppactor"
-TestActor2DataEnd:
 
 SECTION "All Actor Data", ROMX, BANK[1]
 
@@ -264,6 +262,11 @@ KitchenMissingGlassDataEnd:
 KitchenMissingGlassTilemap: INCBIN "gfx/backgrounds/KitchenMissingGlass.tilemap"
 KitchenMissingGlassTilemapEnd:
 
+KitchenBrokenGlassData: INCBIN "gfx/backgrounds/KitchenBrokenGlass.2bpp"
+KitchenBrokenGlassDataEnd: 
+KitchenBrokenGlassTilemap: INCBIN "gfx/backgrounds/KitchenBrokenGlass.tilemap"
+KitchenBrokenGlassTilemapEnd:
+
 LyingInBedData: INCBIN "gfx/backgrounds/LyingInBed.2bpp"
 LyingInBedDataEnd: 
 LyingInBedTilemap: INCBIN "gfx/backgrounds/LyingInBed.tilemap"
@@ -274,6 +277,8 @@ StairwellDownDataEnd:
 StairwellDownTilemap: INCBIN "gfx/backgrounds/StairwellDown.tilemap"
 StairwellDownTilemapEnd:
 
+	SECTION "Background Data 3", ROMX, BANK[1]
+	
 StairwellDownBrokenVaseData: INCBIN "gfx/backgrounds/StairwellDownBrokenVase.2bpp"
 StairwellDownBrokenVaseDataEnd: 
 StairwellDownBrokenVaseTilemap: INCBIN "gfx/backgrounds/StairwellDownBrokenVase.tilemap"
