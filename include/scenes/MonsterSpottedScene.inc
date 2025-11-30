@@ -103,23 +103,25 @@ RunMonsterSpottedScene:
 ; *go look down stairs, monster is down there peeking around corner*
 ; - switch to the down stairs view
 
-    fade_to_new_background 1, StairwellDownBrokenVaseData, StairwellDownBrokenVaseDataEnd, StairwellDownBrokenVaseTilemap, StairwellDownBrokenVaseTilemapEnd
+    fade_to_new_background 3, StairwellDownData, StairwellDownDataEnd, StairwellDownTilemap, StairwellDownTilemapEnd
 ; - monster visible on the stairs
 	load_new_actor 1, MonsterFullViewData, MonsterFullViewDataEnd - MonsterFullViewData
 	set_actor_in_middle
 	set_actor_pos 24, 36
+	delay_frames 10
 ; - play growl effect
 ; 
 	call ShowTextBox
 	draw_text_delay FAST_TEXT_SPEED, $99E1, "!!!"
 	delay_frames 240
 	call ClearTextBox
-	hide_textbox 1, StairwellDownBrokenVaseTilemap
+	hide_textbox 3, StairwellDownTilemap
 
 	delay_frames 30
 ; *immediately go to hide under the bed*
 ; - switch to the under bed background
 	call HideMetasprite
+	delay_frames 2
     fade_to_new_background 2, HidingUnderBedData, HidingUnderBedDataEnd, HidingUnderBedTilemap, HidingUnderBedTilemapEnd
 
 ; What the hell was
