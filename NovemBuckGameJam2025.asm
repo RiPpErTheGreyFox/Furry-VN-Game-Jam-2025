@@ -8,6 +8,7 @@ INCLUDE "include/vnEngineUtilitySubroutines.inc"
 INCLUDE "include/vnEngineSoundSubroutines.inc"
 
 ; Scene files
+INCLUDE "include/scenes/IntroScene.inc"
 INCLUDE "include/scenes/TestScene.inc"
 
 ; gameplay definitions
@@ -159,7 +160,8 @@ ProgramMain:
 
 	; start running through all the scenes
 	; here we just have the big pile of every scene
-	call RunTestScene
+	;call RunTestScene
+	call RunIntroScene
 .FinishedTickingScene
 
 jp ProgramMain
