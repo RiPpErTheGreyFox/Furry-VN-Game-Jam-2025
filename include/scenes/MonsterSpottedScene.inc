@@ -19,7 +19,7 @@ RunMonsterSpottedScene:
 	call ClearTextBox
 	delay_frames 60
 
-    fade_to_new_background 1, StairwellDownBrokenVaseData, StairwellDownBrokenVaseDataEnd, StairwellDownBrokenVaseTilemap, StairwellDownBrokenVaseTilemapEnd
+    fade_to_new_background 3, StairwellDownData, StairwellDownDataEnd, StairwellDownTilemap, StairwellDownTilemapEnd
     delay_frames 240
 	delay_frames 240
     
@@ -52,7 +52,7 @@ RunMonsterSpottedScene:
 ; - switch to laying in bed
 ; *decide to go to bed because obviously imagining shit*
 ; *laying in bed hear another noise*
-    fade_to_new_background 3, LyingInBedData, LyingInBedDataEnd, LyingInBedTilemap, LyingInBedTilemapEnd
+    fade_to_new_background 2, BedroomData, BedroomDataEnd, BedroomTilemap, BedroomTilemapEnd
     delay_frames 240
 	delay_frames 240
 
@@ -78,7 +78,7 @@ RunMonsterSpottedScene:
 	call WaitForAPress
 	call ClearTextBox
 
-	hide_textbox 3, LyingInBedTilemap
+	hide_textbox 2, BedroomTilemap
 ; - play footstep sound again
 
 	delay_frames 240
@@ -98,7 +98,7 @@ RunMonsterSpottedScene:
 	call ClearTextBox
 	delay_frames 60
 
-	hide_textbox 3, LyingInBedTilemap
+	hide_textbox 2, BedroomTilemap
 	delay_frames 240
 ; *go look down stairs, monster is down there peeking around corner*
 ; - switch to the down stairs view
