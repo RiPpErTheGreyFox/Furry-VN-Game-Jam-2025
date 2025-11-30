@@ -105,8 +105,9 @@ RunMonsterSpottedScene:
 
     fade_to_new_background 1, StairwellDownBrokenVaseData, StairwellDownBrokenVaseDataEnd, StairwellDownBrokenVaseTilemap, StairwellDownBrokenVaseTilemapEnd
 ; - monster visible on the stairs
-	load_new_actor 1, MonsterReachingData, MonsterReachingDataEnd - MonsterReachingData
+	load_new_actor 1, MonsterFullViewData, MonsterFullViewDataEnd - MonsterFullViewData
 	set_actor_in_middle
+	set_actor_pos 24, 36
 ; - play growl effect
 ; 
 	call ShowTextBox

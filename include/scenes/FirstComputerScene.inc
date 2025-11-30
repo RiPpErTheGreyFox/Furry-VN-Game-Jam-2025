@@ -85,7 +85,7 @@ RunFirstComputerScene:
 	delay_frames 20
 
 ; for sure, not one
-	draw_text_delay FAST_TEXT_SPEED, $99A2, "for sure, not one"
+	draw_text_delay FAST_TEXT_SPEED, $99A2, "for sure not one"
 	delay_frames 20
 
 ; to mess with
