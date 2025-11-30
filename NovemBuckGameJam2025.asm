@@ -134,6 +134,7 @@ ProgramEntry:							; main game loop
 	ld [wButtonDebounce], a
 
 	call EnableLCD
+	call EnableSound
 	
 
 ProgramMain:
@@ -158,7 +159,6 @@ ProgramMain:
 
 	; start running through all the scenes
 	; here we just have the big pile of every scene
-	call InitialiseTestScene
 	call RunTestScene
 .FinishedTickingScene
 
@@ -166,7 +166,7 @@ jp ProgramMain
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;	DATA
+;;	ENGINE DATA
 ;;	BLOCK
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -177,3 +177,107 @@ AlphabetTilesEnd:
 
 TextBoxTiles: INCBIN "gfx/backgrounds/TextBoxtiles.2bpp"
 TextBoxTilesEnd:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;	GAME DATA
+;;	BLOCK
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+SECTION "TestScene Graphics Data", ROMX, BANK[1]
+
+TestSpriteData: INCBIN "gfx/spritesheettest.2bpp"
+TestSpriteDataEnd:
+
+TestBackgroundData: INCBIN "gfx/backgrounds/TestBackground.2bpp"
+TestBackgroundDataEnd: 
+TestBackgroundTilemap: INCBIN "gfx/backgrounds/TestBackground.tilemap"
+TestBackgroundTilemapEnd:
+
+TestActorData: INCBIN "gfx/actors/DoeStanding.2bppactor"
+TestActorDataEnd:
+
+TestActor2Data: INCBIN "gfx/actors/DoeTalking.2bppactor"
+TestActor2DataEnd:
+
+SECTION "All Actor Data", ROMX, BANK[1]
+
+DoeStandingData: INCBIN "gfx/actors/DoeStanding.2bppactor"
+DoeStandingDataEnd:
+
+DoeTalkingData: INCBIN "gfx/actors/DoeTalking.2bppactor"
+DoeTalkingDataEnd:
+
+MonsterFullViewData: INCBIN "gfx/actors/MonsterFullView.2bppactor"
+MonsterFullViewDataEnd:
+
+MonsterSideViewData: INCBIN "gfx/actors/MonsterSideView.2bppactor"
+MonsterSideViewDataEnd:
+
+MonsterPeekingData: INCBIN "gfx/actors/MonsterPeeking.2bppactor"
+MonsterPeekingDataEnd:
+
+MonsterPeekingWindowData: INCBIN "gfx/actors/MonsterPeekingWindow.2bppactor"
+MonsterPeekingWindowDataEnd:
+
+MonsterReachingData: INCBIN "gfx/actors/MonsterReaching.2bppactor"
+MonsterReachingDataEnd:
+
+
+SECTION "Background Data 1", ROMX, BANK[2]
+
+BedroomData: INCBIN "gfx/backgrounds/Bedroom.2bpp"
+BedroomDataEnd: 
+BedroomTilemap: INCBIN "gfx/backgrounds/Bedroom.tilemap"
+BedroomTilemapEnd:
+
+BlackBackgroundData: INCBIN "gfx/backgrounds/BlackBackground.2bpp"
+BlackBackgroundDataEnd: 
+BlackBackgroundTilemap: INCBIN "gfx/backgrounds/BlackBackground.tilemap"
+BlackBackgroundTilemapEnd:
+
+BrokenGlassCloseupData: INCBIN "gfx/backgrounds/BrokenGlassCloseup.2bpp"
+BrokenGlassCloseupDataEnd: 
+BrokenGlassCloseupTilemap: INCBIN "gfx/backgrounds/BrokenGlassCloseup.tilemap"
+BrokenGlassCloseupTilemapEnd:
+
+ComputerData: INCBIN "gfx/backgrounds/Computer.2bpp"
+ComputerDataEnd: 
+ComputerTilemap: INCBIN "gfx/backgrounds/Computer.tilemap"
+ComputerTilemapEnd:
+
+HidingUnderBedData: INCBIN "gfx/backgrounds/HidingUnderBed.2bpp"
+HidingUnderBedDataEnd: 
+HidingUnderBedTilemap: INCBIN "gfx/backgrounds/HidingUnderBed.tilemap"
+HidingUnderBedTilemapEnd:
+
+KitchenData: INCBIN "gfx/backgrounds/Kitchen.2bpp"
+KitchenDataEnd: 
+KitchenTilemap: INCBIN "gfx/backgrounds/Kitchen.tilemap"
+KitchenTilemapEnd:
+
+	SECTION "Background Data 2", ROMX, BANK[3]
+
+KitchenMissingGlassData: INCBIN "gfx/backgrounds/KitchenMissingGlass.2bpp"
+KitchenMissingGlassDataEnd: 
+KitchenMissingGlassTilemap: INCBIN "gfx/backgrounds/KitchenMissingGlass.tilemap"
+KitchenMissingGlassTilemapEnd:
+
+LyingInBedData: INCBIN "gfx/backgrounds/LyingInBed.2bpp"
+LyingInBedDataEnd: 
+LyingInBedTilemap: INCBIN "gfx/backgrounds/LyingInBed.tilemap"
+LyingInBedTilemapEnd:
+
+StairwellDownData: INCBIN "gfx/backgrounds/StairwellDown.2bpp"
+StairwellDownDataEnd: 
+StairwellDownTilemap: INCBIN "gfx/backgrounds/StairwellDown.tilemap"
+StairwellDownTilemapEnd:
+
+StairwellDownBrokenVaseData: INCBIN "gfx/backgrounds/StairwellDownBrokenVase.2bpp"
+StairwellDownBrokenVaseDataEnd: 
+StairwellDownBrokenVaseTilemap: INCBIN "gfx/backgrounds/StairwellDownBrokenVase.tilemap"
+StairwellDownBrokenVaseTilemapEnd:
+
+TitleSceneData: INCBIN "gfx/backgrounds/TitleScene.2bpp"
+TitleSceneDataEnd: 
+TitleSceneTilemap: INCBIN "gfx/backgrounds/TitleScene.tilemap"
+TitleSceneTilemapEnd:
