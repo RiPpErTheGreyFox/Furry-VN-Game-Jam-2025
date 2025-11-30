@@ -27,8 +27,9 @@ InitialiseTestScene:
 	ld [rSCY], a
 
 	; initialise the sound driver and start the song
-	ld hl, mainmenu_song
-	call hUGE_init
+	;ld hl, mainmenu_song
+	;call hUGE_init
+	call EnableSound
 
 	call EnableLCD
 
@@ -108,7 +109,15 @@ RunTestScene:
 	; load up every background in order
 	fade_to_new_background 2, BedroomData, BedroomDataEnd, BedroomTilemap, BedroomTilemapEnd
 	delay_frames 60
+	call ShowTextBox
 	draw_text_delay 10, $99E1, "bedroom"
+	call WaitForAPress
+	call ClearTextBox
+	draw_text_delay_custom_sound 10, $99E1, "testing clear", sound_item_grab
+	draw_text_delay_custom_sound 10, $9A01, "functionality", sound_item_grab
+	call WaitForAPress
+	delay_frames 60
+	hide_textbox 2, BedroomTilemap
 	delay_frames 60
 
 	fade_to_new_background 2, BlackBackgroundData, BlackBackgroundDataEnd, BlackBackgroundTilemap, BlackBackgroundTilemapEnd

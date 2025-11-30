@@ -103,6 +103,32 @@ RandomNumberFour:
 
 	ret
 
+
+; loops forever until an A press is called
+; @clobbers a, bc, de, hl
+WaitForAPress:
+	ld b, 31							; little bit of debounce as a treat
+	call WaitFramesWithUpdate
+	
+	ld a, [wFirstTextBoxOffset]		; drop in the A button prompt
+	add 3								; bottom right $9A33
+	ld [$9A33], a
+.Loop
+	ld b, 1
+	call WaitFramesWithUpdate
+	call UpdateKeys
+
+    ld a, [wCurKeys]
+	and a, PADF_A
+	jp nz, .EndOfFunc
+	jp .Loop
+.EndOfFunc
+	; restore the bottom right tile
+	ld a, [wFirstTextBoxOffset]		; drop in the bottom right tile
+	add 6								; bottom right $9A33
+	ld [$9A33], a
+	ret
+
 ; Load Text font into VRAM for future use
 ; @clobbers a, bc, de, hl
 InitialiseFont:
@@ -126,12 +152,35 @@ InitialiseFont:
 
 	ret
 
+; Loads the tiles for the textbox into VRAM for later use
+; @clobbers a, bc, de, hl
+InitialiseTextBoxGraphicsFixedAddress:
+
+	; Swap ROM bank to bank 1
+	ld a, 1
+	ld [$2000], a
+
+	ld de, TextBoxTiles
+	ld bc, TextBoxTilesEnd - TextBoxTiles
+	ld hl, $8C40
+
+	call Memcopy
+
+	; swap ROM bank back to bank 1
+	ld a, 1
+	ld [$2000], a
+
+	ld a, 196
+	ld [wFirstTextBoxOffset], a
+
+	ret
+
 ; Load Text font into VRAM for future use
 ; This version places the font at the very end of the tile bank to allow the normal tile loader more space
 ; @clobbers a, bc, de, hl
 InitialiseFontFixedAddress:
 	
-	; Swap bank to bank 2
+	; Swap bank to bank 1
 	ld a, 1
 	ld [$2000], a
 
@@ -212,6 +261,52 @@ DrawTextTilesWithDelays:
 
 	jp DrawTextTilesWithDelays
 
+; Draws text with a delay and a custom sound, giving a typewriter like effect
+; @param de: address of the first tile to start writing to
+; @param hl: pointer to the address containing the literal string
+; @param c: number of frames between letters to wait
+; @param hScratchArea and +1: 
+; @clobbers a
+DrawTextTilesWithDelaysCustomSound:
+	ld b, c
+	; param b is fed directly into WaitFrames
+	push de
+	push hl
+	call WaitFramesWithUpdate
+	pop hl
+	pop de
+	; check for the end of string character (255/$FF)
+	ld a, [hl]
+	cp 255
+	ret z
+
+	; write the current character (in hl) to the address
+	; on the tilemap (in de)
+	ld a, [wFontFirstTileOffset]
+	ld b, a
+	ld a, [hl]
+	add b
+	call WaitNoMode3
+	ld [de], a
+
+	inc hl
+	inc de
+
+	push bc
+	push hl
+	ld hl, hScratchArea
+	ld b, [hl]
+	inc hl
+	ld c, [hl]
+	ld h, b
+	ld l, c
+	;ld l, [hScratchArea + 1]
+	call PlaySoundHL
+	pop hl
+	pop bc
+
+	jp DrawTextTilesWithDelaysCustomSound
+
 ; Takes the number in the A register, turns it into BCD and outputs a string to hl
 ; @param a: the number to turn into a string
 ; @param hl: memory address of the block of RAM to output the string to
@@ -269,6 +364,123 @@ DisableLCD:
 
 	ret
 
+; Draws the textbox to the screen for dialogue
+; @clobbers: af, bc, de, hl
+ShowTextBox:
+	; top left $99C0
+	ld a, [wFirstTextBoxOffset]			; set the offset of the loaded tileset
+	add 0								; add tile number
+	ld [$99C0], a						; set the tilemap in VRAM
+	; top right $99D3
+	ld a, [wFirstTextBoxOffset]
+	add 2
+	ld [$99D3], a
+	; left middle $99E0, $9A00
+	ld a, [wFirstTextBoxOffset]
+	add 8
+	ld [$99E0], a
+	ld [$9A00], a
+	; right middle $99F3, $9A13
+	ld a, [wFirstTextBoxOffset]
+	add 7
+	ld [$99F3], a
+	ld [$9A13], a
+	; bottom left $9A20
+	ld a, [wFirstTextBoxOffset]
+	add 4
+	ld [$9A20], a
+	; bottom right $9A33
+	ld a, [wFirstTextBoxOffset]
+	add 6
+	ld [$9A33], a
+
+	; now fill in the middle with loops
+	; top row $99C1 - $99D2
+	ld b, $99D2 - $99C1 + $1
+	ld hl, $99C1
+.Loop1:
+	Call WaitNoMode3
+	ld a, [wFirstTextBoxOffset]
+	add 1
+	ld [hli], a
+	dec b
+	jp nz, .Loop1
+	; second row $99E1 - $99F2
+	ld b, $99F2 - $99E1 + $1
+	ld hl, $99E1
+.Loop2:
+	Call WaitNoMode3
+	ld a, [wFirstTextBoxOffset]
+	add 9
+	ld [hli], a
+	dec b
+	jp nz, .Loop2
+	; third row $9A01 - $9A12
+	ld b, $9A12 - $9A01 + $1
+	ld hl, $9A01
+.Loop3:
+	Call WaitNoMode3
+	ld a, [wFirstTextBoxOffset]
+	add 9
+	ld [hli], a
+	dec b
+	jp nz, .Loop3
+	; bottom row $9A21 - $9A32
+	ld b, $9A32 - $9A21 + $1
+	ld hl, $9A21
+.Loop4:
+	Call WaitNoMode3
+	ld a, [wFirstTextBoxOffset]
+	add 5
+	ld [hli], a
+	dec b
+	jp nz, .Loop4
+
+	ret
+
+; Clears the textbox back to its default state, empty and ready for text
+ClearTextBox:
+	; second row $99E1 - $99F2
+	ld b, $99F2 - $99E1 + $1
+	ld hl, $99E1
+.Loop1:
+	Call WaitNoMode3
+	ld a, [wFirstTextBoxOffset]
+	add 9
+	ld [hli], a
+	dec b
+	jp nz, .Loop1
+	; third row $9A01 - $9A12
+	ld b, $9A12 - $9A01 + $1
+	ld hl, $9A01
+.Loop2:
+	Call WaitNoMode3
+	ld a, [wFirstTextBoxOffset]
+	add 9
+	ld [hli], a
+	dec b
+	jp nz, .Loop2
+	ret
+
+; Hides the textbox fully, pulling data from the original background
+; @params a: bank of the original background
+; @params bc: the address of the original tilemap
+HideTextBox:
+	; swap ROM bank before we start
+	ld [$2000], a
+	; grab the VRAM address in the cartridge of $99C0 and then run to $9A33 (length 74 in decimal)
+	ld hl, $99C0
+	call ConvertVRAMTileMapToROMTileMap
+	ld d, h
+	ld e, l
+	ld hl, $99C0
+	ld bc, $9A33 - $99C0 + 1
+	call MemcopyNoMode3
+	
+	ld a, 1
+	ld [$2000], a						; swap ROM bank back to 1
+	ret
+
 ; enables the LCD
 EnableLCD:
 	push af ; save registers
@@ -285,7 +497,7 @@ WaitFramesWithUpdate:
 	push bc
 	call RenderMetaSprite
     
-    call hUGE_dosound
+    ;call hUGE_dosound
 
     pop bc
     call WaitFrames
@@ -1282,42 +1494,16 @@ GetTileAddressByIndex:
 
 ; Take a TileMap address, and convert it to the correct address for the "same" tile but in the ROM
 ; used to get the original tilemap in case it was changed
-; @param c: LevelNumber
+; @param bc: address of the original background
 ; @param hl: address to be converted
 ; @return hl: converted address
-; @clobbers b
 ConvertVRAMTileMapToROMTileMap:
 	; remove the offset to the original TileMap
 	ld a, h
 	sub $98								; turns the base address from $9800+ to $0000+
 	ld h, a
 
-	;check which level number it is and adjust the offset accordingly
-	ld a, c
-	cp a, 0
-	jp z, .Cutscene
-	cp a, 1
-	jp z, .TileMapOne
-	cp a, 2
-	jp z, .TileMapTwo
-	cp a, 3
-	jp z, .TileMapThree
-	; TODO: if we have more than one level, add more conditionals
-.Cutscene
-	;ld bc, CutsceneTilemap
-	;add hl, bc
-	jp .EndOfFunc
-.TileMapOne
-	;ld bc, LevelOneTilemap
-	;add hl, bc
-	jp .EndOfFunc
-.TileMapTwo
-	;ld bc, LevelTwoTilemap
-	;add hl, bc
-	jp .EndOfFunc
-.TileMapThree
-	;ld bc, LevelThreeTilemap
-	;add hl, bc
+	add hl, bc
 .EndOfFunc
 	ret
 

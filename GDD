@@ -118,17 +118,24 @@ Thursday to-do:
 Look into window renderer for rendering text (make it easier to show/hide)
 
 Saturday/Sunday to-do:
-function/macro that draws a textbox
-function/macro that clears a textbox
-function/macro that replaces the textbox with the original tiles beneath
-flashing A in corner while waiting for A function
+*placeholder art for press A and textbox
+*function/macro that draws a textbox
+*function/macro that clears a textbox
+*function/macro that replaces the textbox with the original tiles beneath
+*different function for draw text tile loop with different sound
+function for enable screen interrupt, screen interrupt for shaky text (use rng or smth)
+*looping function for press A to continue
 *Updated background loader to allow more than 128 tiles
+flashing A in corner while waiting for A function
 
 Finish first pass of story with placeholders
 Finish second pass of story
 
 *Finish first pass of art
 Do second pass
+
+Stretch:
+use screen interrupts to mess with the text lines when monster is talking
 
 Needed for MVP:
 Basic storyboard done

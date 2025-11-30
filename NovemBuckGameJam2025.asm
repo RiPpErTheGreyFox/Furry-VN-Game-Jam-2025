@@ -48,6 +48,7 @@ wTileBankZero: dw						; variables that hold the current count of tiles loaded b
 wTileBankOne: dw
 wTileBankTwo: dw
 wFontFirstTileOffset: db				; where in Bank one the font starts
+wFirstTextBoxOffset: db					; where in bank one the textbox starts
 
 ; System definitions
 SECTION "System Type", WRAM0
@@ -125,6 +126,7 @@ ProgramEntry:							; main game loop
 	call SetDefaultDMGPalette
 	call LoadDefaultCGBPalette
 
+	call InitialiseTextBoxGraphicsFixedAddress
 	call InitialiseFontFixedAddress
 
 	; Initialise variables
@@ -172,3 +174,6 @@ SECTION "Font Data", ROMX, BANK[1]
 
 AlphabetTiles: INCBIN "gfx/backgrounds/text-font.2bpp"
 AlphabetTilesEnd:
+
+TextBoxTiles: INCBIN "gfx/backgrounds/TextBoxtiles.2bpp"
+TextBoxTilesEnd:
